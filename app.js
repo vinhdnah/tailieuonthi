@@ -24077,6 +24077,15 @@ function initEventListeners() {
     renderTree('');
   };
 
+  const closeActivePanel = () => {
+    elViewerPanel.classList.remove('active');
+    elFolderPanel.classList.remove('active');
+    elEmptyPanel.classList.add('active');
+    elPreviewIframe.src = '';
+    activeFile = null;
+    activeFolder = null;
+  };
+
   const logo = document.querySelector('.logo');
   if (logo) {
     logo.addEventListener('click', resetToWelcome);
@@ -24084,12 +24093,12 @@ function initEventListeners() {
 
   const btnCloseViewer = document.getElementById('btn-close-viewer');
   if (btnCloseViewer) {
-    btnCloseViewer.addEventListener('click', resetToWelcome);
+    btnCloseViewer.addEventListener('click', closeActivePanel);
   }
 
   const btnCloseFolder = document.getElementById('btn-close-folder');
   if (btnCloseFolder) {
-    btnCloseFolder.addEventListener('click', resetToWelcome);
+    btnCloseFolder.addEventListener('click', closeActivePanel);
   }
 
   // Suggestions and Search Input handling
