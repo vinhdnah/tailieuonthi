@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GDrive Direct Downloader & Manager</title>
+  
+  <!-- Font and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fa-brands fa-google-drive logo-icon"></i>
+          <span class="logo-text">GDrive <span class="accent-text">Direct</span></span>
+        </div>
+      </div>
+      
+      <!-- Search & Quick Actions -->
+      <div class="sidebar-controls">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="search-input" placeholder="Tìm kiếm file..." autocomplete="off">
+          <div id="search-suggestions" class="search-suggestions-dropdown"></div>
+        </div>
+        <div class="action-buttons">
+          <button id="btn-open-import" class="btn btn-primary btn-sm btn-full">
+            <i class="fa-solid fa-plus"></i> Nhập dữ liệu
+          </button>
+          <button id="btn-clear-all" class="btn btn-danger-outline btn-sm" title="Xóa toàn bộ dữ liệu">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Tree View Container -->
+      <div class="tree-container">
+        <div class="tree-header">
+          <span>DANH SÁCH FILE & THƯ MỤC</span>
+          <span id="file-count" class="badge">0</span>
+        </div>
+        
+        <!-- View Mode Selector -->
+        <div class="view-mode-tabs">
+          <button id="btn-view-category" class="view-mode-btn active" data-mode="category">
+            <i class="fa-solid fa-layer-group"></i> Lớp & Môn
+          </button>
+          <button id="btn-view-teacher" class="view-mode-btn" data-mode="teacher">
+            <i class="fa-solid fa-user-tie"></i> Giáo viên
+          </button>
+        </div>
+
+        <div id="file-tree" class="file-tree">
+          <!-- Dynamically populated via JS -->
+          <div class="tree-empty-state">
+            <i class="fa-regular fa-folder-open"></i>
+            <p>Chưa có file nào được nhập.</p>
+            <button id="btn-empty-import" class="btn btn-link">Nhập dữ liệu ngay</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-footer">
+        <div class="status-indicator">
+          <span class="dot green"></span>
+          <span>Sẵn sàng hoạt động</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Empty State / Welcome Panel -->
+      <section id="empty-panel" class="main-panel empty-panel active">
+        <div class="welcome-content">
+          <div class="welcome-icon-glow">
+            <i class="fa-brands fa-google-drive"></i>
+          </div>
+          <h1>Trình Quản Lý & Tải File Google Drive</h1>
+          <p class="subtitle">Tải xuống trực tiếp và xem trước tài liệu Google Drive không cần chuyển trang</p>
+          
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feat-icon"><i class="fa-solid fa-bolt"></i></div>
+              <h3>Tải trực tiếp 1-Click</h3>
+              <p>Tự động bỏ qua giao diện trung gian của Drive để tải ngay tệp tin về máy.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feat-icon"><i class="fa-solid fa-eye"></i></div>
+              <h3>Xem trước tức thì</h3>
+              <p>Hiển thị tài liệu PDF, hình ảnh, văn bản trực quan trực tiếp trên màn hình.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feat-icon"><i class="fa-solid fa-code"></i></div>
+              <h3>Nhập mã HTML tiện lợi</h3>
+              <p>Sao chép cây thư mục HTML (như danh sách bài học của Thầy Tài) và dán để nhập nhanh.</p>
+            </div>
+          </div>
+          
+          <div class="quick-import-shortcut">
+            <button id="btn-welcome-import" class="btn btn-primary btn-lg">
+              <i class="fa-solid fa-file-import"></i> Bắt đầu nhập danh sách file
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- File Details & Preview Panel -->
+      <section id="viewer-panel" class="main-panel viewer-panel">
+        <!-- Panel Header / Navigation / Details -->
+        <div class="viewer-header">
+          <div class="file-info">
+            <h2 id="active-file-title">File Name.pdf</h2>
+            <div class="file-meta">
+              <span class="meta-item"><i class="fa-regular fa-folder"></i> <span id="active-file-folder">Thư mục</span></span>
+              <span class="meta-item"><i class="fa-regular fa-file-pdf"></i> PDF Document</span>
+              <span class="meta-item monospace" id="active-file-id">ID: 1v3eQ71...</span>
+            </div>
+          </div>
+          
+          <div class="viewer-actions">
+            <a id="btn-download-direct" href="#" target="_blank" class="btn btn-success">
+              <i class="fa-solid fa-circle-down"></i> <span class="btn-text">Tải xuống trực tiếp</span>
+            </a>
+            <a id="btn-open-drive" href="#" target="_blank" class="btn btn-secondary">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> <span class="btn-text">Mở Drive</span>
+            </a>
+            <button id="btn-copy-link" class="btn btn-accent">
+              <i class="fa-regular fa-copy"></i> <span class="btn-text">Sao chép link tải</span>
+            </button>
+            <button id="btn-close-viewer" class="btn-close-panel" title="Đóng xem trước">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Preview Pane -->
+        <div class="preview-pane">
+          <div class="preview-loading" id="preview-loader">
+            <div class="spinner"></div>
+            <p>Đang tải nội dung xem trước...</p>
+          </div>
+          <iframe id="preview-iframe" src="" frameborder="0" allow="autoplay"></iframe>
+        </div>
+      </section>
+
+      <!-- Folder Details & Batch Download Panel -->
+      <section id="folder-panel" class="main-panel folder-panel">
+        <div class="viewer-header">
+          <div class="file-info">
+            <h2 id="active-folder-title">Tên thư mục</h2>
+            <div class="file-meta">
+              <span class="meta-item"><i class="fa-regular fa-folder-open"></i> Thư mục</span>
+              <span class="meta-item"><i class="fa-solid fa-layer-group"></i> <span id="active-folder-count">0</span> tệp tin</span>
+            </div>
+          </div>
+          
+          <div class="viewer-actions">
+            <button id="btn-download-folder" class="btn btn-success">
+              <i class="fa-solid fa-cloud-arrow-down"></i> <span class="btn-text">Tải xuống toàn bộ thư mục</span>
+            </button>
+            <button id="btn-close-folder" class="btn-close-panel" title="Đóng thư mục">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="folder-view-body">
+          <p class="folder-view-desc">
+            <i class="fa-solid fa-circle-info"></i> Hệ thống sẽ kích hoạt tải xuống đa nhiệm tuần tự. Trình duyệt của bạn có thể sẽ hỏi: <em>"Allow this site to download multiple files?"</em>. Vui lòng nhấn <strong>Cho phép (Allow)</strong> để quá trình tải xuống diễn ra tự động.
+          </p>
+
+          <!-- Progress Bar Container -->
+          <div id="batch-progress-container" class="batch-progress-container">
+            <div class="progress-info">
+              <span id="progress-text"><i class="fa-solid fa-spinner fa-spin"></i> Đang chuẩn bị tải...</span>
+              <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="progress-bar-fill" class="progress-bar-fill"></div>
+            </div>
+          </div>
+
+          <div class="folder-files-header">Tệp tin trong thư mục</div>
+          <div id="folder-files-list" class="folder-files-list">
+            <!-- Dynamically populated list of files -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <!-- Import Dialog / Modal -->
+  <div id="import-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-file-import"></i> Nhập Dữ Liệu Google Drive</h2>
+        <button id="btn-close-modal" class="btn-close">&times;</button>
+      </div>
+      
+      <div class="modal-tabs">
+        <button class="tab-btn active" data-tab="tab-html">Nhập cây thư mục HTML</button>
+        <button class="tab-btn" data-tab="tab-single">Nhập Link Đơn</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Tab: HTML Tree -->
+        <div id="tab-html" class="tab-content active">
+          <p class="tab-desc">Dán mã HTML chứa danh sách file Google Drive (hỗ trợ phân tích cú pháp các thẻ có <code>data-href</code> hoặc liên kết Drive thông thường):</p>
+          <textarea id="html-import-input" placeholder="Dán mã HTML vào đây... Ví dụ:
+<div class='folderTree_ft'>
+  <ul>
+    <li class='folder_ft'><span class='ft-label-text'>Thư Mục A</span>
+      <ul>
+        <li data-href='https://drive.google.com/open?id=XXXX'>Bài 1.pdf</li>
+      </ul>
+    </li>
+  </ul>
+</div>"></textarea>
+        </div>
+
+        <!-- Tab: Single Link -->
+        <div id="tab-single" class="tab-content">
+          <p class="tab-desc">Nhập link Google Drive chia sẻ và tên file tương ứng:</p>
+          <div class="form-group">
+            <label for="single-link-url">Đường dẫn Google Drive:</label>
+            <input type="text" id="single-link-url" placeholder="https://drive.google.com/open?id=... hoặc https://drive.google.com/file/d/...">
+          </div>
+          <div class="form-group">
+            <label for="single-link-name">Tên file:</label>
+            <input type="text" id="single-link-name" placeholder="Tên tệp tin (ví dụ: Chuyên đề 1.pdf)">
+          </div>
+          <div class="form-group">
+            <label for="single-link-folder">Tên thư mục (Không bắt buộc):</label>
+            <input type="text" id="single-link-folder" placeholder="Ví dụ: TÀI LIỆU TỰ NHIÊN">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-cancel-import" class="btn btn-secondary">Hủy bỏ</button>
+        <button id="btn-process-import" class="btn btn-primary">Xác nhận nhập</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
