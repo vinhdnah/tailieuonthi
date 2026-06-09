@@ -9,6 +9,7 @@ const SUBJECT_ICONS = {
   "Địa lý": "fa-globe",
   "HSA (ĐHQG Hà Nội)": "fa-building-columns",
   "TSA (ĐH Bách Khoa)": "fa-gears",
+  "ĐGNL (ĐHQG TP.HCM)": "fa-award",
   "SPT (ĐH Sư Phạm)": "fa-graduation-cap",
   "ĐGNL Khác": "fa-circle-question",
   "Khác": "fa-folder-closed"
@@ -22949,6 +22950,24 @@ const ROADMAP_SUBJECTS = {
     {
       "chapterName": "Phần 3: Tư duy Khoa học",
       "milestones": ["Phân tích dữ liệu thực nghiệm khoa học tự nhiên", "Suy luận logic từ các hiện tượng Vật lý - Hóa học thực tế", "Giải quyết các tình huống kỹ thuật giả định dựa trên nguyên lý cơ bản"]
+    }
+  ],
+  "ĐGNL (ĐHQG TP.HCM)": [
+    {
+      "chapterName": "Phần 1: Sử dụng ngôn ngữ (Tiếng Việt)",
+      "milestones": ["Đọc hiểu văn bản văn học, nghị luận xã hội", "Nhận diện lỗi sai ngữ pháp, ngữ nghĩa trong câu tiếng Việt", "Phân tích đặc điểm ngữ âm, từ vựng và cú pháp", "Hoàn thành câu và chọn từ phù hợp ngữ cảnh tiếng Việt"]
+    },
+    {
+      "chapterName": "Phần 2: Sử dụng ngôn ngữ (Tiếng Anh)",
+      "milestones": ["Xác định cấu trúc câu và ngữ pháp tiếng Anh cơ bản", "Đọc hiểu bài khóa trắc nghiệm và suy luận ý chính", "Bài đọc điền từ vào chỗ trống (Cloze test)", "Phân tích ngữ cảnh và lựa chọn từ vựng tiếng Anh thích hợp"]
+    },
+    {
+      "chapterName": "Phần 3: Toán học & Phân tích số liệu",
+      "milestones": ["Toán học phổ thông đại cương và ứng dụng", "Tư duy logic giải câu đố và suy luận chuỗi sự kiện", "Phân tích số liệu biểu đồ tròn, cột, đường và bảng dữ liệu"]
+    },
+    {
+      "chapterName": "Phần 4: Tư duy khoa học",
+      "milestones": ["Phân tích số liệu, bảng biểu và đồ thị thực nghiệm khoa học", "Suy luận giải quyết vấn đề Vật lý và Hóa học thực tế", "Hoạch định thí nghiệm, dự đoán quy luật Sinh học & Công nghệ", "Đánh giá logic thông tin kinh tế, xã hội và tự nhiên"]
     }
   ]
 };
