@@ -22678,6 +22678,24 @@ const elFileCount = document.getElementById('file-count');
 const elEmptyPanel = document.getElementById('empty-panel');
 const elViewerPanel = document.getElementById('viewer-panel');
 
+// Screen elements
+const elWelcomeSelector = document.getElementById('welcome-selector');
+const elDocumentsApp = document.getElementById('documents-app');
+const elRoadmapApp = document.getElementById('roadmap-app');
+
+// Selector Buttons
+const elCardGotoDocs = document.getElementById('card-goto-docs');
+const elCardGotoRoadmap = document.getElementById('card-goto-roadmap');
+const elThemeToggleFloating = document.getElementById('theme-toggle-floating');
+
+// Header Home buttons
+const elBtnBackToSelectorDocs = document.getElementById('btn-back-to-selector-docs');
+const elBtnBackToSelectorRoadmap = document.getElementById('btn-back-to-selector-roadmap');
+
+// Theme Toggle buttons
+const elThemeToggleDocs = document.getElementById('theme-toggle-docs');
+const elThemeToggleRoadmap = document.getElementById('theme-toggle-roadmap');
+
 // View Mode buttons
 const elBtnViewCategory = document.getElementById('btn-view-category');
 const elBtnViewTeacher = document.getElementById('btn-view-teacher');
@@ -22692,6 +22710,7 @@ const elBtnOpenDrive = document.getElementById('btn-open-drive');
 const elBtnCopyLink = document.getElementById('btn-copy-link');
 const elPreviewIframe = document.getElementById('preview-iframe');
 const elPreviewLoader = document.getElementById('preview-loader');
+const elPreviewError = document.getElementById('preview-error');
 
 // Folder Panel elements
 const elFolderPanel = document.getElementById('folder-panel');
@@ -22726,6 +22745,194 @@ const elSingleLinkFolder = document.getElementById('single-link-folder');
 
 // Toast notification
 const elToast = document.getElementById('toast');
+
+
+
+// Roadmap Sidebar/Navigation elements
+const elRoadmapSubjectsList = document.getElementById('roadmap-subjects-list');
+const elGlobalRoadmapProgress = document.getElementById('global-roadmap-progress');
+
+// Roadmap Main Area elements
+const elRoadmapMainTitle = document.getElementById('roadmap-main-title');
+const elRoadmapTabPhases = document.getElementById('roadmap-tab-phases');
+const elRoadmapTabSubject = document.getElementById('roadmap-tab-subject');
+const elRoadmapTabTodos = document.getElementById('roadmap-tab-todos');
+const elSubjectProgressPercent = document.getElementById('subject-progress-percent');
+const elSubjectProgressBarFill = document.getElementById('subject-progress-bar-fill');
+const elSubjectChaptersList = document.getElementById('subject-chapters-list');
+
+// Todo Planner elements
+const elTodoForm = document.getElementById('todo-form');
+const elTodoInput = document.getElementById('todo-input');
+const elTodoList = document.getElementById('todo-list');
+
+// State Variables
+let activeMode = 'selector'; // 'selector' | 'documents' | 'roadmap'
+let activeTheme = 'dark'; // 'dark' | 'light'
+let currentRoadmapTab = 'phases'; // 'phases' | 'todos' | subjectName
+let roadmapProgress = {}; // key -> boolean
+let roadmapTodos = []; // array of todo objects
+
+// Predefined Roadmap Subjects and their topics (chapters)
+const ROADMAP_SUBJECTS = {
+  "Toán học": [
+    {
+      "chapterName": "Chương 1: Ứng dụng đạo hàm khảo sát hàm số",
+      "milestones": ["Tính đơn điệu của hàm số", "Cực trị của hàm số", "Giá trị lớn nhất, nhỏ nhất", "Đường tiệm cận", "Khảo sát và vẽ đồ thị"]
+    },
+    {
+      "chapterName": "Chương 2: Lũy thừa, Mũ và Logarit",
+      "milestones": ["Lũy thừa và Hàm số lũy thừa", "Logarit và Hàm số logarit", "Phương trình mũ và logarit", "Bất phương trình mũ và logarit"]
+    },
+    {
+      "chapterName": "Chương 3: Nguyên hàm & Tích phân",
+      "milestones": ["Nguyên hàm", "Tích phân", "Ứng dụng tích phân tính diện tích, thể tích"]
+    },
+    {
+      "chapterName": "Chương 4: Hình học không gian & Oxyz",
+      "milestones": ["Khối đa diện và thể tích", "Khối tròn xoay (Nón, Trụ, Cầu)", "Hệ tọa độ Oxyz trong không gian", "Phương trình mặt phẳng, đường thẳng, mặt cầu"]
+    }
+  ],
+  "Vật lý": [
+    {
+      "chapterName": "Chuyên đề 1: Dao động cơ",
+      "milestones": ["Dao động điều hòa", "Con lắc lò xo & Con lắc đơn", "Dao động tắt dần, cưỡng bức, cộng hưởng", "Tổng hợp dao động"]
+    },
+    {
+      "chapterName": "Chuyên đề 2: Sóng cơ & Sóng âm",
+      "milestones": ["Sự truyền sóng cơ", "Giao thoa sóng", "Sóng dừng", "Đặc trưng vật lý & sinh lý của âm"]
+    },
+    {
+      "chapterName": "Chuyên đề 3: Dòng điện xoay chiều",
+      "milestones": ["Đại cương về dòng điện xoay chiều", "Mạch RLC mắc nối tiếp", "Công suất & Hệ số công suất", "Máy phát điện & Truyền tải điện năng"]
+    },
+    {
+      "chapterName": "Chuyên đề 4: Dao động & Sóng điện từ",
+      "milestones": ["Mạch dao động LC", "Điện từ trường & Sóng điện từ", "Sự truyền thông tin bằng sóng vô tuyến"]
+    }
+  ],
+  "Hóa học": [
+    {
+      "chapterName": "Chuyên đề 1: Este - Lipit",
+      "milestones": ["Khái niệm, tính chất Este", "Chất béo (Lipit)", "Phản ứng xà phòng hóa & bài tập"]
+    },
+    {
+      "chapterName": "Chuyên đề 2: Cacbohidrat",
+      "milestones": ["Glucozơ & Fructozơ", "Saccarozơ, Tinh bột & Xenlulozơ"]
+    },
+    {
+      "chapterName": "Chuyên đề 3: Amin, Amino Axit & Protein",
+      "milestones": ["Amin & Anilin", "Amino Axit & Peptit", "Protein & Enzim"]
+    },
+    {
+      "chapterName": "Chuyên đề 4: Polime & Vật liệu polime",
+      "milestones": ["Đại cương về Polime", "Chất dẻo, tơ, cao su & keo dán"]
+    }
+  ],
+  "Ngữ văn": [
+    {
+      "chapterName": "Phần 1: Đọc hiểu văn bản",
+      "milestones": ["Phương thức biểu đạt & Phong cách ngôn ngữ", "Thao tác lập luận & Biện pháp tu từ", "Phân tích cấu trúc tác dụng"]
+    },
+    {
+      "chapterName": "Phần 2: Nghị luận xã hội",
+      "milestones": ["Nghị luận về một tư tưởng đạo lý", "Nghị luận về một hiện tượng đời sống", "Kỹ năng viết đoạn văn 200 chữ"]
+    },
+    {
+      "chapterName": "Phần 3: Nghị luận văn học",
+      "milestones": ["Tác phẩm Thơ trọng tâm", "Tác phẩm Truyện & Kí trọng tâm", "Phần kịch & Ôn tập so sánh văn học"]
+    }
+  ],
+  "Tiếng Anh": [
+    {
+      "chapterName": "Ngữ pháp cốt lõi",
+      "milestones": ["12 Thì tiếng Anh", "Câu bị động & Câu gián tiếp", "Mệnh đề quan hệ & Điều kiện", "Động từ khuyết thiếu & So sánh"]
+    },
+    {
+      "chapterName": "Từ vựng & Ngữ âm",
+      "milestones": ["Phát âm và Trọng âm", "Cụm động từ (Phrasal Verbs)", "Thành ngữ & Cụm từ cố định"]
+    },
+    {
+      "chapterName": "Kỹ năng đọc viết",
+      "milestones": ["Bài đọc điền từ", "Bài đọc hiểu tìm ý chính, suy luận", "Viết lại câu & Nối câu ghép"]
+    }
+  ],
+  "HSA (ĐHQG Hà Nội)": [
+    {
+      "chapterName": "Phần 1: Định lượng (Toán)",
+      "milestones": ["Toán phổ thông 10, 11, 12", "Thống kê và xác suất", "Bài toán ứng dụng thực tế"]
+    },
+    {
+      "chapterName": "Phần 2: Định tính (Văn)",
+      "milestones": ["Đọc hiểu văn bản & kiến thức tiếng Việt", "Phân tích tác phẩm, điền từ chỗ trống", "Nhận diện lỗi sai trong câu"]
+    },
+    {
+      "chapterName": "Phần 3: Khoa học",
+      "milestones": ["Kiến thức cốt lõi Lý - Hóa", "Sinh học, Lịch sử, Địa lý tổng hợp", "Phân tích bảng số liệu & thông tin"]
+    }
+  ],
+  "TSA (ĐH Bách Khoa)": [
+    {
+      "chapterName": "Phần 1: Tư duy Toán học",
+      "milestones": ["Đại số & Hình học nâng cao", "Logarit, tích phân & Xác suất", "Tư duy logic giải quyết vấn đề"]
+    },
+    {
+      "chapterName": "Phần 2: Tư duy Đọc hiểu",
+      "milestones": ["Đọc văn bản khoa học, kỹ thuật", "Phân tích, suy luận thông tin", "Đánh giá cấu trúc luận điểm văn bản"]
+    },
+    {
+      "chapterName": "Phần 3: Tư duy Khoa học",
+      "milestones": ["Phân tích dữ liệu thực nghiệm", "Suy luận vật lý, hóa học thực nghiệm", "Tư duy hệ thống sinh học & công nghệ"]
+    }
+  ]
+};
+
+const ROADMAP_PHASES = [
+  {
+    "phaseNum": "1",
+    "title": "Giai đoạn 1: Xây dựng nền tảng vững chắc",
+    "time": "Khoảng 4-6 tháng đầu năm học",
+    "desc": "Tập trung học toàn bộ kiến thức cốt lõi SGK mới lớp 12, song song hệ thống lại nền tảng lớp 10 & 11 cần thiết.",
+    "milestones": [
+      "Nắm vững lý thuyết cơ bản từng chương",
+      "Giải thành thạo bài tập cơ bản trong SGK và sách bài tập",
+      "Hệ thống hóa công thức toán, lý, hóa và ghi chép sơ đồ văn"
+    ]
+  },
+  {
+    "phaseNum": "2",
+    "title": "Giai đoạn 2: Tổng ôn kiến thức toàn diện",
+    "time": "Khoảng 2-3 tháng tiếp theo",
+    "desc": "Ôn tập theo chuyên đề, đào sâu kiến thức, liên hệ liên môn và rèn luyện kỹ năng giải bài tập nâng cao.",
+    "milestones": [
+      "Hệ thống hóa kiến thức toàn bộ môn học thành sơ đồ tư duy",
+      "Luyện tập các dạng bài nâng cao, bài toán vận dụng cao",
+      "Tham gia các đợt thi thử chuyên đề để đánh giá lỗ hổng kiến thức"
+    ]
+  },
+  {
+    "phaseNum": "3",
+    "title": "Giai đoạn 3: Luyện đề thực chiến",
+    "time": "Khoảng 2 tháng trước kỳ thi",
+    "desc": "Giải đề thi thử của các trường, sở GD&ĐT và đề minh họa. Rèn luyện tâm lý phòng thi và quản lý thời gian.",
+    "milestones": [
+      "Bấm giờ tự luyện tối thiểu 15-20 đề/môn",
+      "Phân tích lỗi sai chi tiết sau mỗi đề để bổ sung kiến thức yếu",
+      "Tập trung rèn tốc độ làm các câu hỏi trắc nghiệm"
+    ]
+  },
+  {
+    "phaseNum": "4",
+    "title": "Giai đoạn 4: Về đích & Chuẩn bị tâm lý",
+    "time": "2 tuần cuối cùng",
+    "desc": "Rà soát lại toàn bộ công thức cốt lõi, xem lại các lỗi sai hay mắc phải, giữ gìn sức khỏe và chuẩn bị tinh thần tốt nhất.",
+    "milestones": [
+      "Đọc lại các bản ghi chép lỗi sai (sổ tay note lỗi)",
+      "Hạn chế giải đề khó mới, chỉ xem lại các công thức và sơ đồ cốt lõi",
+      "Ngủ đủ giấc, chuẩn bị đầy đủ giấy tờ, dụng cụ thi cử"
+    ]
+  }
+];
 
 // --- Helper Functions ---
 
