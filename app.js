@@ -24481,11 +24481,13 @@ function initAppTheme() {
   activeTheme = savedTheme;
   
   if (savedTheme === 'light') {
+    document.documentElement.classList.add('light-theme');
     document.body.classList.add('light-theme');
     if (elThemeToggleFloating) elThemeToggleFloating.innerHTML = '<i class="fa-solid fa-sun"></i>';
     if (elThemeToggleDocs) elThemeToggleDocs.innerHTML = '<i class="fa-solid fa-sun"></i>';
     if (elThemeToggleRoadmap) elThemeToggleRoadmap.innerHTML = '<i class="fa-solid fa-sun"></i>';
   } else {
+    document.documentElement.classList.remove('light-theme');
     document.body.classList.remove('light-theme');
     if (elThemeToggleFloating) elThemeToggleFloating.innerHTML = '<i class="fa-solid fa-moon"></i>';
     if (elThemeToggleDocs) elThemeToggleDocs.innerHTML = '<i class="fa-solid fa-moon"></i>';
