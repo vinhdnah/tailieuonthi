@@ -40,6 +40,26 @@
   --transition-fast: all 0.15s ease;
 }
 
+body.light-theme {
+  --bg-app: #f1f3f7;
+  --bg-sidebar: #ffffff;
+  --bg-panel: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-card-hover: rgba(255, 255, 255, 0.9);
+  --bg-input: #e2e8f0;
+  
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-color-hover: rgba(0, 0, 0, 0.15);
+  
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-dark: #f8fafc;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -55,6 +75,7 @@ body {
   line-height: 1.5;
   /* Prevent rubber-band scroll on iOS */
   overscroll-behavior: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* App Container Layout */
@@ -76,6 +97,7 @@ body {
   height: 100%;
   z-index: 10;
   box-shadow: var(--shadow-sm);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .sidebar-header {
@@ -697,6 +719,7 @@ body {
   background-color: var(--bg-app);
   height: 100%;
   position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .main-panel {
@@ -823,6 +846,7 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 20px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .file-info {
@@ -1743,3 +1767,390 @@ body {
     padding: 12px !important;
   }
 }
+
+/* --- App Screen Toggle & Welcome Selector UI --- */
+.app-screen {
+  display: none;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.app-screen.active {
+  display: block;
+}
+
+.selector-screen {
+  display: none;
+  width: 100vw;
+  height: 100dvh;
+  overflow-y: auto;
+  background-color: var(--bg-app);
+  background-image: radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
+  transition: background-color 0.3s ease;
+}
+
+.selector-screen.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.selector-container {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.selector-header {
+  margin-bottom: 40px;
+}
+
+.selector-logo {
+  font-size: 56px;
+  color: var(--color-primary);
+  margin-bottom: 16px;
+  filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.5));
+}
+
+.selector-header h1 {
+  font-family: var(--font-title);
+  font-size: 38px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.selector-header p {
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.selector-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.selector-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 40px 30px;
+  border-radius: var(--radius-lg);
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+}
+
+.selector-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-6px);
+  background-color: var(--bg-card-hover);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
+}
+
+.card-icon {
+  font-size: 36px;
+  color: var(--color-primary);
+  margin-bottom: 24px;
+}
+
+.selector-card h2 {
+  font-family: var(--font-title);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.selector-card p {
+  color: var(--text-muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+
+.card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-primary);
+  transition: var(--transition-fast);
+}
+
+.selector-card:hover .card-btn {
+  color: var(--color-accent);
+  transform: translateX(4px);
+}
+
+.selector-footer {
+  color: var(--text-muted);
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Floating Theme Button */
+.theme-toggle-floating-btn {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+}
+
+.theme-toggle-floating-btn:hover {
+  transform: scale(1.05);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Light theme overrides for floating toggle */
+body.light-theme .theme-toggle-floating-btn {
+  background-color: #ffffff;
+}
+
+/* --- Roadmap Specific Layout & Styling --- */
+.roadmap-tab-content {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.roadmap-tab-content.active {
+  display: block;
+}
+
+/* Timeline/Phases Styles */
+.roadmap-phases-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.phase-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex;
+  gap: 20px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.phase-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--color-primary), var(--color-accent));
+}
+
+.phase-card:hover {
+  border-color: var(--border-color-hover);
+  transform: translateX(4px);
+  background-color: var(--bg-card-hover);
+}
+
+.phase-num {
+  font-size: 36px;
+  font-weight: 800;
+  font-family: var(--font-title);
+  color: rgba(99, 102, 241, 0.2);
+  line-height: 1;
+}
+
+.phase-content {
+  flex: 1;
+}
+
+.phase-content h3 {
+  font-family: var(--font-title);
+  font-size: 18px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.phase-content p {
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.phase-milestones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.milestone-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-main);
+  user-select: none;
+}
+
+.milestone-item input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--color-primary);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.milestone-item.checked span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* Subject Chapters List */
+.subject-chapters-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.chapter-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  transition: var(--transition-fast);
+}
+
+.chapter-card:hover {
+  border-color: var(--border-color-hover);
+}
+
+.chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--border-color);
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+
+.chapter-title {
+  font-family: var(--font-title);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.chapter-milestones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Todos list Styles */
+.todo-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  transition: var(--transition-fast);
+}
+
+.todo-card:hover {
+  border-color: var(--border-color-hover);
+  background-color: var(--bg-card-hover);
+}
+
+.todo-text-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-main);
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+}
+
+.todo-text-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-success);
+  cursor: pointer;
+}
+
+.todo-card.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.btn-delete-todo {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition-fast);
+}
+
+.btn-delete-todo:hover {
+  color: var(--color-danger);
+}
+
+/* Responsive adjustments for Welcome Selector Page */
+@media (max-width: 768px) {
+  .selector-header h1 {
+    font-size: 28px !important;
+  }
+  .selector-cards {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .selector-card {
+    padding: 30px 20px !important;
+  }
+  .theme-toggle-floating-btn {
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+}
+

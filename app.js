@@ -24201,6 +24201,359 @@ function closeModal() {
   elSingleLinkFolder.value = '';
 }
 
+// --- Theme & Mode Management ---
+
+function initAppTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  activeTheme = savedTheme;
+  
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+    if (elThemeToggleFloating) elThemeToggleFloating.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    if (elThemeToggleDocs) elThemeToggleDocs.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    if (elThemeToggleRoadmap) elThemeToggleRoadmap.innerHTML = '<i class="fa-solid fa-sun"></i>';
+  } else {
+    document.body.classList.remove('light-theme');
+    if (elThemeToggleFloating) elThemeToggleFloating.innerHTML = '<i class="fa-solid fa-moon"></i>';
+    if (elThemeToggleDocs) elThemeToggleDocs.innerHTML = '<i class="fa-solid fa-moon"></i>';
+    if (elThemeToggleRoadmap) elThemeToggleRoadmap.innerHTML = '<i class="fa-solid fa-moon"></i>';
+  }
+}
+
+function toggleAppTheme() {
+  const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('theme', newTheme);
+  initAppTheme();
+  showToast(`Đã chuyển sang giao diện ${newTheme === 'light' ? 'Sáng' : 'Tối'}!`);
+}
+
+function switchAppMode(mode) {
+  activeMode = mode;
+  localStorage.setItem('activeMode', mode);
+  
+  if (mode === 'selector') {
+    elWelcomeSelector.classList.add('active');
+    elDocumentsApp.classList.remove('active');
+    elRoadmapApp.classList.remove('active');
+    elPreviewIframe.src = '';
+  } else if (mode === 'documents') {
+    elWelcomeSelector.classList.remove('active');
+    elDocumentsApp.classList.add('active');
+    elRoadmapApp.classList.remove('active');
+    renderTree(currentSearchQuery);
+  } else if (mode === 'roadmap') {
+    elWelcomeSelector.classList.remove('active');
+    elDocumentsApp.classList.remove('active');
+    elRoadmapApp.classList.add('active');
+    renderRoadmapSubjectsSidebar();
+    selectRoadmapTab(currentRoadmapTab);
+    updateRoadmapProgress();
+  }
+}
+
+// --- Roadmap Dashboard Logic ---
+
+function renderRoadmapSubjectsSidebar() {
+  if (!elRoadmapSubjectsList) return;
+  elRoadmapSubjectsList.innerHTML = '';
+  
+  Object.keys(ROADMAP_SUBJECTS).forEach(subjName => {
+    const item = document.createElement('div');
+    item.className = 'folder-label';
+    item.setAttribute('data-roadmap-tab', subjName);
+    if (currentRoadmapTab === subjName) {
+      item.classList.add('active');
+    }
+    
+    const icon = document.createElement('i');
+    icon.className = `folder-icon fa-solid ${SUBJECT_ICONS[subjName] || 'fa-book'}`;
+    icon.style.color = 'var(--color-primary)';
+    
+    const text = document.createElement('span');
+    text.className = 'ft-label-text';
+    text.textContent = subjName;
+    
+    item.appendChild(icon);
+    item.appendChild(text);
+    elRoadmapSubjectsList.appendChild(item);
+    
+    item.addEventListener('click', () => {
+      selectRoadmapTab(subjName);
+    });
+  });
+}
+
+function selectRoadmapTab(tabName) {
+  currentRoadmapTab = tabName;
+  
+  // Highlight in sidebar
+  document.querySelectorAll('#roadmap-app .folder-label').forEach(el => {
+    if (el.getAttribute('data-roadmap-tab') === tabName) {
+      el.classList.add('active');
+    } else {
+      el.classList.remove('active');
+    }
+  });
+  
+  if (tabName === 'phases') {
+    if (elRoadmapMainTitle) elRoadmapMainTitle.textContent = 'Các Giai Đoạn Ôn Thi';
+    if (elRoadmapTabPhases) elRoadmapTabPhases.classList.add('active');
+    if (elRoadmapTabSubject) elRoadmapTabSubject.classList.remove('active');
+    if (elRoadmapTabTodos) elRoadmapTabTodos.classList.remove('active');
+    renderPhases();
+  } else if (tabName === 'todos') {
+    if (elRoadmapMainTitle) elRoadmapMainTitle.textContent = 'Kế Hoạch Cá Nhân (Todo)';
+    if (elRoadmapTabPhases) elRoadmapTabPhases.classList.remove('active');
+    if (elRoadmapTabSubject) elRoadmapTabSubject.classList.remove('active');
+    if (elRoadmapTabTodos) elRoadmapTabTodos.classList.add('active');
+    renderTodos();
+  } else {
+    if (elRoadmapMainTitle) elRoadmapMainTitle.textContent = `Lộ trình ôn tập môn ${tabName}`;
+    if (elRoadmapTabPhases) elRoadmapTabPhases.classList.remove('active');
+    if (elRoadmapTabSubject) elRoadmapTabSubject.classList.add('active');
+    if (elRoadmapTabTodos) elRoadmapTabTodos.classList.remove('active');
+    renderSubjectRoadmap(tabName);
+  }
+}
+
+function renderPhases() {
+  if (!elRoadmapTabPhases) return;
+  elRoadmapTabPhases.innerHTML = '';
+  
+  const container = document.createElement('div');
+  container.className = 'roadmap-phases-container';
+  
+  ROADMAP_PHASES.forEach((phase, pIndex) => {
+    const card = document.createElement('div');
+    card.className = 'phase-card';
+    
+    const numDiv = document.createElement('div');
+    numDiv.className = 'phase-num';
+    numDiv.textContent = phase.phaseNum;
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'phase-content';
+    
+    const titleH3 = document.createElement('h3');
+    titleH3.innerHTML = `${phase.title} <span style="font-size: 12.5px; font-weight: normal; color: var(--color-primary); margin-left: 8px;">(${phase.time})</span>`;
+    
+    const descP = document.createElement('p');
+    descP.textContent = phase.desc;
+    
+    const milestonesDiv = document.createElement('div');
+    milestonesDiv.className = 'phase-milestones';
+    
+    phase.milestones.forEach((ms, mIndex) => {
+      const msKey = `phase_${pIndex}_ms_${mIndex}`;
+      const isChecked = !!roadmapProgress[msKey];
+      
+      const label = document.createElement('label');
+      label.className = isChecked ? 'milestone-item checked' : 'milestone-item';
+      
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = isChecked;
+      
+      const span = document.createElement('span');
+      span.textContent = ms;
+      
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      milestonesDiv.appendChild(label);
+      
+      checkbox.addEventListener('change', () => {
+        roadmapProgress[msKey] = checkbox.checked;
+        saveRoadmapProgress();
+        label.classList.toggle('checked', checkbox.checked);
+        updateRoadmapProgress();
+      });
+    });
+    
+    contentDiv.appendChild(titleH3);
+    contentDiv.appendChild(descP);
+    contentDiv.appendChild(milestonesDiv);
+    
+    card.appendChild(numDiv);
+    card.appendChild(contentDiv);
+    container.appendChild(card);
+  });
+  
+  elRoadmapTabPhases.appendChild(container);
+}
+
+function renderSubjectRoadmap(subjectName) {
+  if (!elSubjectChaptersList) return;
+  elSubjectChaptersList.innerHTML = '';
+  
+  const chapters = ROADMAP_SUBJECTS[subjectName] || [];
+  let checkedCount = 0;
+  let totalCount = 0;
+  
+  chapters.forEach((chapter, cIndex) => {
+    const card = document.createElement('div');
+    card.className = 'chapter-card';
+    
+    const header = document.createElement('div');
+    header.className = 'chapter-header';
+    
+    const title = document.createElement('div');
+    title.className = 'chapter-title';
+    title.textContent = chapter.chapterName;
+    
+    header.appendChild(title);
+    card.appendChild(header);
+    
+    const milestonesDiv = document.createElement('div');
+    milestonesDiv.className = 'chapter-milestones';
+    
+    chapter.milestones.forEach((ms, mIndex) => {
+      totalCount++;
+      const msKey = `subj_${subjectName}_chap_${cIndex}_ms_${mIndex}`;
+      const isChecked = !!roadmapProgress[msKey];
+      if (isChecked) checkedCount++;
+      
+      const label = document.createElement('label');
+      label.className = isChecked ? 'milestone-item checked' : 'milestone-item';
+      
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = isChecked;
+      
+      const span = document.createElement('span');
+      span.textContent = ms;
+      
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      milestonesDiv.appendChild(label);
+      
+      checkbox.addEventListener('change', () => {
+        roadmapProgress[msKey] = checkbox.checked;
+        saveRoadmapProgress();
+        label.classList.toggle('checked', checkbox.checked);
+        
+        // Recalculate local progress bar
+        let newChecked = 0;
+        let newTotal = 0;
+        chapters.forEach((ch, chIdx) => {
+          ch.milestones.forEach((_, msIdx) => {
+            newTotal++;
+            if (roadmapProgress[`subj_${subjectName}_chap_${chIdx}_ms_${msIdx}`]) {
+              newChecked++;
+            }
+          });
+        });
+        const percent = newTotal > 0 ? Math.round((newChecked / newTotal) * 100) : 0;
+        if (elSubjectProgressPercent) elSubjectProgressPercent.textContent = `${percent}%`;
+        if (elSubjectProgressBarFill) elSubjectProgressBarFill.style.width = `${percent}%`;
+        
+        updateRoadmapProgress();
+      });
+    });
+    
+    card.appendChild(milestonesDiv);
+    elSubjectChaptersList.appendChild(card);
+  });
+  
+  const percent = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
+  if (elSubjectProgressPercent) elSubjectProgressPercent.textContent = `${percent}%`;
+  if (elSubjectProgressBarFill) elSubjectProgressBarFill.style.width = `${percent}%`;
+}
+
+function updateRoadmapProgress() {
+  let checked = 0;
+  let total = 0;
+  
+  ROADMAP_PHASES.forEach((phase, pIndex) => {
+    phase.milestones.forEach((_, mIndex) => {
+      total++;
+      if (roadmapProgress[`phase_${pIndex}_ms_${mIndex}`]) {
+        checked++;
+      }
+    });
+  });
+  
+  Object.keys(ROADMAP_SUBJECTS).forEach(subjName => {
+    ROADMAP_SUBJECTS[subjName].forEach((chapter, cIndex) => {
+      chapter.milestones.forEach((_, mIndex) => {
+        total++;
+        if (roadmapProgress[`subj_${subjName}_chap_${cIndex}_ms_${mIndex}`]) {
+          checked++;
+        }
+      });
+    });
+  });
+  
+  const globalPercent = total > 0 ? Math.round((checked / total) * 100) : 0;
+  if (elGlobalRoadmapProgress) elGlobalRoadmapProgress.textContent = `${globalPercent}%`;
+}
+
+function renderTodos() {
+  if (!elTodoList) return;
+  elTodoList.innerHTML = '';
+  
+  if (roadmapTodos.length === 0) {
+    elTodoList.innerHTML = `
+      <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+        <i class="fa-solid fa-list-check" style="font-size: 36px; margin-bottom: 16px; opacity: 0.4; color: var(--color-success)"></i>
+        <p style="font-size: 14px;">Danh sách việc cần làm trống.</p>
+        <p style="font-size: 12px; margin-top: 4px; opacity: 0.8;">Hãy thêm mục tiêu học tập mới bằng ô nhập phía trên.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  roadmapTodos.forEach(todo => {
+    const card = document.createElement('div');
+    card.className = todo.completed ? 'todo-card completed' : 'todo-card';
+    
+    const textGroup = document.createElement('div');
+    textGroup.className = 'todo-text-group';
+    
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = todo.completed;
+    
+    const textSpan = document.createElement('span');
+    textSpan.className = 'todo-text';
+    textSpan.textContent = todo.text;
+    
+    textGroup.appendChild(checkbox);
+    textGroup.appendChild(textSpan);
+    
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'btn-delete-todo';
+    deleteBtn.innerHTML = '<i class="fa-regular fa-trash-can"></i>';
+    deleteBtn.title = 'Xóa nhiệm vụ';
+    
+    card.appendChild(textGroup);
+    card.appendChild(deleteBtn);
+    elTodoList.appendChild(card);
+    
+    checkbox.addEventListener('change', () => {
+      todo.completed = checkbox.checked;
+      saveRoadmapTodos();
+      card.classList.toggle('completed', checkbox.checked);
+    });
+    
+    deleteBtn.addEventListener('click', () => {
+      roadmapTodos = roadmapTodos.filter(t => t.id !== todo.id);
+      saveRoadmapTodos();
+      renderTodos();
+    });
+  });
+}
+
+function saveRoadmapProgress() {
+  localStorage.setItem('roadmap_progress', JSON.stringify(roadmapProgress));
+}
+
+// Save Todo items to LocalStorage
+function saveRoadmapTodos() {
+  localStorage.setItem('roadmap_todos', JSON.stringify(roadmapTodos));
+}
+
+// --- UI Actions & Events ---
+
 // Init Event Listeners
 function initEventListeners() {
   const resetToWelcome = () => {
@@ -24373,11 +24726,86 @@ function initEventListeners() {
     elPreviewLoader.style.display = 'none';
     elPreviewIframe.style.display = 'block';
   });
+
+  // --- Welcome Selector Events ---
+  if (elCardGotoDocs) {
+    elCardGotoDocs.addEventListener('click', () => switchAppMode('documents'));
+  }
+  if (elCardGotoRoadmap) {
+    elCardGotoRoadmap.addEventListener('click', () => switchAppMode('roadmap'));
+  }
+  if (elBtnBackToSelectorDocs) {
+    elBtnBackToSelectorDocs.addEventListener('click', () => switchAppMode('selector'));
+  }
+  if (elBtnBackToSelectorRoadmap) {
+    elBtnBackToSelectorRoadmap.addEventListener('click', () => switchAppMode('selector'));
+  }
+
+  // --- Global Theme Swapping ---
+  if (elThemeToggleFloating) {
+    elThemeToggleFloating.addEventListener('click', toggleAppTheme);
+  }
+  if (elThemeToggleDocs) {
+    elThemeToggleDocs.addEventListener('click', toggleAppTheme);
+  }
+  if (elThemeToggleRoadmap) {
+    elThemeToggleRoadmap.addEventListener('click', toggleAppTheme);
+  }
+
+  // --- Roadmap tab navigation ---
+  document.querySelectorAll('#roadmap-app .folder-label[data-roadmap-tab]').forEach(el => {
+    el.addEventListener('click', () => {
+      const tab = el.getAttribute('data-roadmap-tab');
+      selectRoadmapTab(tab);
+    });
+  });
+
+  // --- Todo Submit listener ---
+  if (elTodoForm) {
+    elTodoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = elTodoInput.value.trim();
+      if (text) {
+        roadmapTodos.push({
+          id: Date.now(),
+          text: text,
+          completed: false
+        });
+        saveRoadmapTodos();
+        elTodoInput.value = '';
+        renderTodos();
+        showToast('Đã thêm mục tiêu học tập mới!');
+      }
+    });
+  }
 }
 
 // --- App Entry point ---
 document.addEventListener('DOMContentLoaded', () => {
+  // Load documents tree data
   loadData();
   renderTree();
+  
+  // Load theme
+  initAppTheme();
+  
+  // Load roadmap progress & todos
+  try {
+    const savedProgress = localStorage.getItem('roadmap_progress');
+    roadmapProgress = savedProgress ? JSON.parse(savedProgress) : {};
+    
+    const savedTodos = localStorage.getItem('roadmap_todos');
+    roadmapTodos = savedTodos ? JSON.parse(savedTodos) : [];
+  } catch (e) {
+    console.error("Lỗi khi tải dữ liệu lộ trình học tập", e);
+    roadmapProgress = {};
+    roadmapTodos = [];
+  }
+  
+  // Bind all event listeners
   initEventListeners();
+  
+  // Load saved mode or default to selector
+  const savedMode = localStorage.getItem('activeMode') || 'selector';
+  switchAppMode(savedMode);
 });
