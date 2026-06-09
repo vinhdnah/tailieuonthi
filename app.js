@@ -22924,6 +22924,7 @@ function classifySubject(folderName, files = []) {
 }
 
 // Teacher detector function
+// Teacher detector function
 function detectTeacher(folderName, fileName) {
   const text = (folderName + " " + fileName).toLowerCase().normalize('NFC');
   
@@ -22939,11 +22940,14 @@ function detectTeacher(folderName, fileName) {
   if (text.includes("thầy tài") || text.includes("thay tai") || text.includes("địa lý tài") || text.includes("địa tài")) {
     return "Thầy Tài";
   }
-  if (text.includes("phạm liễu")) {
+  if (text.includes("phạm liễu") || text.includes("cô liễu")) {
     return "Cô Phạm Liễu";
   }
-  if (text.includes("sương mai")) {
+  if (text.includes("sương mai") || text.includes("cô mai")) {
     return "Cô Sương Mai";
+  }
+  if (text.includes("cô sen") || text.includes("vũ sen") || text.includes("vu sen")) {
+    return "Cô Sen";
   }
   if (text.includes("thầy nhật") || text.includes("thay nhat")) {
     return "Thầy Nhật";
@@ -22967,13 +22971,56 @@ function detectTeacher(folderName, fileName) {
   if (match) {
     let type = match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase();
     let rawName = match[2].trim();
-    const lowerName = rawName.toLowerCase();
-    const exclusions = ["cô", "dạy", "giáo", "trẻ", "nhà", "khuyên", "ở", "của", "tôi", "cho", "em", "với", "đọc", "hiểu", "hướng", "dẫn", "viết", "phân", "tích", "khác", "này", "kia"];
-    if (lowerName.length >= 2 && !exclusions.some(exc => lowerName === exc || lowerName.startsWith(exc + " ") || lowerName.endsWith(" " + exc))) {
-      let formattedName = rawName.split(/\s+/).map(word => {
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-      }).join(' ');
-      return `${type} ${formattedName}`;
+    
+    // Split the name into words and remove any words that match common non-name terms or stop words
+    const words = rawName.split(/\s+/);
+    const stopWords = [
+      "về", "đích", "ve", "dich", 
+      "sơ", "đồ", "so", "do", 
+      "tổng", "ôn", "tong", "on", 
+      "chuyên", "đề", "chuyen", "de", 
+      "luyện", "luyen", 
+      "lý", "thuyết", "ly", "thuyet", 
+      "bài", "tập", "giảng", "bai", "tap", "giang", 
+      "tài", "liệu", "tai", "lieu", 
+      "thi", "thử", "thu", 
+      "đọc", "hiểu", "doc", "hieu",
+      "nghị", "luận", "nghi", "luan",
+      "tác", "phẩm", "tac", "pham",
+      "bản", "ban",
+      "đại", "học", "dai", "hoc",
+      "trung", "học", "trung", "hoc",
+      "phổ", "thông", "pho", "thong",
+      "lớp", "lop",
+      "cấp", "tốc", "cap", "toc"
+    ];
+    
+    // We only keep the words until we hit a stop word
+    const cleanedWords = [];
+    for (const word of words) {
+      if (stopWords.includes(word.toLowerCase())) {
+        break; // Stop including words as part of the name
+      }
+      cleanedWords.push(word);
+    }
+    
+    if (cleanedWords.length > 0) {
+      let rawNameCleaned = cleanedWords.join(' ');
+      const lowerName = rawNameCleaned.toLowerCase();
+      const exclusions = ["cô", "thầy", "dạy", "giáo", "trẻ", "nhà", "khuyên", "ở", "của", "tôi", "cho", "em", "với", "đọc", "hiểu", "hướng", "dẫn", "viết", "phân", "tích", "khác", "này", "kia"];
+      
+      if (lowerName.length >= 2 && !exclusions.some(exc => lowerName === exc || lowerName.startsWith(exc + " ") || lowerName.endsWith(" " + exc))) {
+        let formattedName = rawNameCleaned.split(/\s+/).map(word => {
+          return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        }).join(' ');
+        
+        // Map common variations to a standardized name
+        if (formattedName.toLowerCase() === "sen" || formattedName.toLowerCase() === "vũ sen") {
+          formattedName = "Sen";
+        }
+        
+        return `${type} ${formattedName}`;
+      }
     }
   }
 
@@ -23056,6 +23103,7 @@ function getTeacherTreeData() {
     "Cô Phạm Liễu",
     "Thầy Nhật",
     "Cô Sương Mai",
+    "Cô Sen",
     "Tào Việt Đức",
     "HSA EDU",
     "VNES",
