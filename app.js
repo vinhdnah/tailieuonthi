@@ -23697,7 +23697,12 @@ function parseAndImportHTML(htmlString) {
       }
       folderName = folderName.replace(/\s+/g, ' ');
 
-      const fileEls = folderEl.querySelectorAll('li.file_ft, li[data-href]');
+      // Only select files that belong directly to this folder, not nested subfolders
+      const allFiles = folderEl.querySelectorAll('li.file_ft, li[data-href]');
+      const fileEls = Array.from(allFiles).filter(fileEl => {
+        const closestFolder = fileEl.closest('.folder_ft');
+        return closestFolder === folderEl;
+      });
       const filesList = [];
       
       fileEls.forEach(fileEl => {
@@ -23715,6 +23720,7 @@ function parseAndImportHTML(htmlString) {
             name = clonedFile.textContent.trim();
           }
           
+          name = name.replace(/\s+/g, ' ');
           filesList.push({ name, url, driveId });
           importedCount++;
         }
@@ -23771,41 +23777,55 @@ function parseAndImportHTML(htmlString) {
       }
     }
     
-    const genericFiles = [];
     const processedIds = new Set();
-    const allElements = doc.querySelectorAll('*');
+    let currentHeading = '';
+    const foldersMap = {}; // heading/topic name -> files array
     
-    allElements.forEach(el => {
-      const attributes = ['href', 'data-href', 'src', 'data-src', 'de', 'video', 'da'];
+    // Use TreeWalker to walk elements in document order
+    const walker = doc.createTreeWalker(doc.body || doc, NodeFilter.SHOW_ELEMENT, null, false);
+    let currentNode = walker.currentNode;
+    while (currentNode) {
+      const tagName = currentNode.tagName.toLowerCase();
       
+      // Detect headings and section titles
+      if (/^(h[1-6])$/.test(tagName) || currentNode.classList.contains('entry-title') || currentNode.classList.contains('folder-title')) {
+        const headingText = currentNode.textContent.trim().replace(/\s+/g, ' ');
+        if (headingText && headingText.length < 150) {
+          currentHeading = headingText;
+        }
+      }
+      
+      const attributes = ['href', 'data-href', 'src', 'data-src', 'de', 'video', 'da'];
       attributes.forEach(attr => {
-        if (el.hasAttribute(attr)) {
-          const val = el.getAttribute(attr);
+        if (currentNode.hasAttribute(attr)) {
+          const val = currentNode.getAttribute(attr);
           const driveId = extractGoogleDriveId(val);
           
           if (driveId && !processedIds.has(driveId)) {
             processedIds.add(driveId);
             let name = '';
             
-            if (el.tagName === 'A' && el.textContent.trim() && el.textContent.trim() !== val) {
-              name = el.textContent.trim();
+            // Try to extract original name from element text
+            if (currentNode.tagName === 'A' && currentNode.textContent.trim() && currentNode.textContent.trim() !== val) {
+              name = currentNode.textContent.trim();
             }
             
-            if (el.tagName.toLowerCase() === 'x-file') {
-              const deId = extractGoogleDriveId(el.getAttribute('de'));
-              const videoId = extractGoogleDriveId(el.getAttribute('video'));
-              const daId = extractGoogleDriveId(el.getAttribute('da'));
+            if (tagName === 'x-file') {
+              const deId = extractGoogleDriveId(currentNode.getAttribute('de'));
+              const videoId = extractGoogleDriveId(currentNode.getAttribute('video'));
+              const daId = extractGoogleDriveId(currentNode.getAttribute('da'));
               
               const uniqueIds = new Set([deId, videoId, daId].filter(id => id !== null));
+              const baseName = currentNode.textContent.trim() || pageTitle || 'Tài liệu';
               
               if (uniqueIds.size > 1) {
                 const suffix = attr === 'de' ? ' (Đề thi)' : attr === 'da' ? ' (Đáp án)' : attr === 'video' ? ' (Video)' : '';
-                name = pageTitle ? (pageTitle + suffix) : ('Tài liệu ' + (suffix || driveId.substring(0, 6)));
+                name = baseName + suffix;
               } else {
-                name = pageTitle || ('Tài liệu GDrive (' + driveId.substring(0, 6) + ')');
+                name = baseName;
               }
-            } else if (el.tagName.toLowerCase() === 'iframe') {
-              name = el.title || pageTitle || 'Khung xem trước PDF';
+            } else if (tagName === 'iframe') {
+              name = currentNode.title || pageTitle || 'Khung xem trước PDF';
             }
             
             if (!name) {
@@ -23813,42 +23833,51 @@ function parseAndImportHTML(htmlString) {
             }
             
             name = name.replace(/\s+/g, ' ');
-            genericFiles.push({ name, url: val, driveId });
+            
+            const folderName = currentHeading || pageTitle || categoryName || "Tệp tin nhập nhanh";
+            if (!foldersMap[folderName]) {
+              foldersMap[folderName] = [];
+            }
+            foldersMap[folderName].push({ name, url: val, driveId });
             importedCount++;
           }
         }
       });
-    });
-    
-    if (genericFiles.length > 0) {
-      const folderName = pageTitle || categoryName || "Tệp tin nhập nhanh";
       
-      const fileCategory = classifyCategory(categoryName + " " + folderName, genericFiles);
-      const subjectName = classifySubject(categoryName + " " + folderName, genericFiles);
-      
-      let cat = fileTreeData.find(c => c.categoryName === fileCategory);
-      if (!cat) {
-        cat = { categoryName: fileCategory, subjects: [] };
-        fileTreeData.push(cat);
-      }
-      
-      let subject = cat.subjects.find(s => s.subjectName === subjectName);
-      if (!subject) {
-        subject = { subjectName, folders: [] };
-        cat.subjects.push(subject);
-      }
-      
-      const existingFolder = subject.folders.find(f => f.folderName === folderName);
-      if (existingFolder) {
-        genericFiles.forEach(newFile => {
-          if (!existingFolder.files.some(f => f.driveId === newFile.driveId)) {
-            existingFolder.files.push(newFile);
-          }
-        });
-      } else {
-        subject.folders.push({ folderName, files: genericFiles });
-      }
+      currentNode = walker.nextNode();
     }
+    
+    // Add all grouped files from foldersMap to tree data
+    Object.keys(foldersMap).forEach(folderName => {
+      const filesList = foldersMap[folderName];
+      if (filesList.length > 0) {
+        const fileCategory = classifyCategory(categoryName + " " + folderName, filesList);
+        const subjectName = classifySubject(categoryName + " " + folderName, filesList);
+        
+        let cat = fileTreeData.find(c => c.categoryName === fileCategory);
+        if (!cat) {
+          cat = { categoryName: fileCategory, subjects: [] };
+          fileTreeData.push(cat);
+        }
+        
+        let subject = cat.subjects.find(s => s.subjectName === subjectName);
+        if (!subject) {
+          subject = { subjectName, folders: [] };
+          cat.subjects.push(subject);
+        }
+        
+        const existingFolder = subject.folders.find(f => f.folderName === folderName);
+        if (existingFolder) {
+          filesList.forEach(newFile => {
+            if (!existingFolder.files.some(f => f.driveId === newFile.driveId)) {
+              existingFolder.files.push(newFile);
+            }
+          });
+        } else {
+          subject.folders.push({ folderName, files: filesList });
+        }
+      }
+    });
   }
   
   if (importedCount > 0) {

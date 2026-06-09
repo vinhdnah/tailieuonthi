@@ -24,6 +24,10 @@
           <i class="fa-brands fa-google-drive logo-icon"></i>
           <span class="logo-text">GDrive <span class="accent-text">Direct</span></span>
         </div>
+        <div class="sidebar-credit">
+          <span>Cre: <strong>-Vinhdnah-</strong></span>
+          <span>-Tài liệu được tổng hợp từ nhiều nguồn-</span>
+        </div>
       </div>
       
       <!-- Search & Quick Actions -->
@@ -150,7 +154,17 @@
             <div class="spinner"></div>
             <p>Đang tải nội dung xem trước...</p>
           </div>
-          <iframe id="preview-iframe" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+          <div class="preview-error" id="preview-error" style="display:none;">
+            <div class="preview-error-icon"><i class="fa-solid fa-film"></i></div>
+            <p class="preview-error-title">Không thể xem trước trong trang này</p>
+            <p class="preview-error-desc">File này (thường là video hoặc tài liệu hạn chế) không hỗ trợ nhúng trực tiếp. Hãy mở trên Google Drive để xem.</p>
+            <a id="btn-open-drive-fallback" href="#" target="_blank" class="btn btn-primary">
+              <i class="fa-solid fa-play"></i> Mở và xem trên Drive
+            </a>
+          </div>
+          <iframe id="preview-iframe" src="" frameborder="0"
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            allowfullscreen></iframe>
         </div>
       </section>
 
