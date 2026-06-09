@@ -23501,7 +23501,7 @@ function renderTree(searchQuery = '') {
 }
 
 // Select file and open preview panel
-function selectFile(file, folderName) {
+function selectFile(file, folderName, pushState = true) {
   activeFile = file;
   activeFolder = null;
   
@@ -23545,10 +23545,14 @@ function selectFile(file, folderName) {
       el.classList.remove('active');
     }
   });
+
+  if (pushState) {
+    history.pushState({ panel: 'file', file: file, folderName: folderName }, '');
+  }
 }
 
 // Select folder and open folder details view
-function selectFolder(folder) {
+function selectFolder(folder, pushState = true) {
   activeFolder = folder;
   activeFile = null;
   
@@ -23619,6 +23623,10 @@ function selectFolder(folder) {
   elBtnDownloadFolder.onclick = () => {
     downloadFolderFiles(folder.files);
   };
+
+  if (pushState) {
+    history.pushState({ panel: 'folder', folder: folder }, '');
+  }
 }
 
 // Batch download trigger with sequential setTimeout spacing
@@ -24093,13 +24101,28 @@ function initEventListeners() {
 
   const btnCloseViewer = document.getElementById('btn-close-viewer');
   if (btnCloseViewer) {
-    btnCloseViewer.addEventListener('click', closeActivePanel);
+    btnCloseViewer.addEventListener('click', () => history.back());
   }
 
   const btnCloseFolder = document.getElementById('btn-close-folder');
   if (btnCloseFolder) {
-    btnCloseFolder.addEventListener('click', closeActivePanel);
+    btnCloseFolder.addEventListener('click', () => history.back());
   }
+
+  // Intercept native mobile swipe-back / browser back gestures
+  window.addEventListener('popstate', (e) => {
+    const state = e.state;
+    if (state && state.panel === 'file') {
+      selectFile(state.file, state.folderName, false);
+    } else if (state && state.panel === 'folder') {
+      selectFolder(state.folder, false);
+    } else {
+      closeActivePanel();
+    }
+  });
+
+  // Ensure initial history state is clean on fresh load
+  history.replaceState(null, '');
 
   // Suggestions and Search Input handling
   elSearchInput.addEventListener('focus', (e) => {
