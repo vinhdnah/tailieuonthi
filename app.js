@@ -23179,7 +23179,7 @@ function reclassifyTree(tree) {
   return newTree;
 }
 
-// Clean up redundant folder name prefixes from file names
+// Clean up redundant folder name prefixes and substrings from file names
 function cleanFileTreeNames(tree) {
   if (!tree) return;
   tree.forEach(category => {
@@ -23188,16 +23188,41 @@ function cleanFileTreeNames(tree) {
       if (!subject.folders) return;
       subject.folders.forEach(folder => {
         if (!folder.files) return;
+        
+        const folderName = folder.folderName.trim();
+        const fNameLower = folderName.toLowerCase();
+        
         folder.files.forEach(file => {
-          const fNameLower = folder.folderName.toLowerCase().trim();
-          const fileNameLower = file.name.toLowerCase().trim();
+          let originalName = file.name.trim();
+          let nameLower = originalName.toLowerCase();
           
-          if (fileNameLower.startsWith(fNameLower)) {
-            let relativeName = file.name.substring(folder.folderName.length).trim();
-            // Remove leading/trailing hyphens, underscores, spaces, or parentheses
-            relativeName = relativeName.replace(/^[-_\s()]+|[-_\s()]+$/g, '').trim();
-            if (relativeName) {
-              file.name = relativeName;
+          // Case 1: File name contains the folder name (if folder name is >= 5 characters)
+          if (fNameLower.length >= 5 && nameLower.includes(fNameLower)) {
+            const index = nameLower.indexOf(fNameLower);
+            let newName = originalName.substring(0, index) + originalName.substring(index + folderName.length);
+            
+            // Clean up leading/trailing symbols, hyphens, colons, parentheses
+            newName = newName.replace(/^[-_\s()/:|[\]]+|[-_\s()/:|[\]]+$/g, '').trim();
+            newName = newName.replace(/\s+/g, ' ');
+            
+            if (newName && newName.length >= 2) {
+              file.name = newName;
+            }
+          } 
+          // Case 2: Folder name is short but followed by a standard separator in the file name
+          else if (fNameLower.length > 0) {
+            const separators = [" - ", " – ", " — ", " : ", ": ", " | ", "/"];
+            for (const sep of separators) {
+              const prefixWithSep = fNameLower + sep.toLowerCase();
+              if (nameLower.startsWith(prefixWithSep)) {
+                let newName = originalName.substring(prefixWithSep.length).trim();
+                newName = newName.replace(/^[-_\s()/:|[\]]+|[-_\s()/:|[\]]+$/g, '').trim();
+                newName = newName.replace(/\s+/g, ' ');
+                if (newName) {
+                  file.name = newName;
+                }
+                break;
+              }
             }
           }
         });
