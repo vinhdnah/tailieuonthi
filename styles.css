@@ -1931,6 +1931,13 @@ body.light-theme .theme-toggle-floating-btn {
 }
 
 /* --- Roadmap Specific Layout & Styling --- */
+#roadmap-app .main-content {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100dvh !important;
+  overflow: hidden;
+}
+
 .roadmap-tab-content {
   display: none;
   animation: fadeIn 0.4s ease;

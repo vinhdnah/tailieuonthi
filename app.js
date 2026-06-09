@@ -22778,111 +22778,177 @@ const ROADMAP_SUBJECTS = {
   "Toán học": [
     {
       "chapterName": "Chương 1: Ứng dụng đạo hàm khảo sát hàm số",
-      "milestones": ["Tính đơn điệu của hàm số", "Cực trị của hàm số", "Giá trị lớn nhất, nhỏ nhất", "Đường tiệm cận", "Khảo sát và vẽ đồ thị"]
+      "milestones": ["Tính đơn điệu của hàm số", "Cực trị của hàm số", "Giá trị lớn nhất & nhỏ nhất", "Đường tiệm cận của đồ thị hàm số", "Khảo sát và vẽ đồ thị hàm số", "Bài toán thực tế tối ưu hóa"]
     },
     {
       "chapterName": "Chương 2: Lũy thừa, Mũ và Logarit",
-      "milestones": ["Lũy thừa và Hàm số lũy thừa", "Logarit và Hàm số logarit", "Phương trình mũ và logarit", "Bất phương trình mũ và logarit"]
+      "milestones": ["Lũy thừa và Hàm số lũy thừa", "Logarit và Hàm số logarit", "Phương trình mũ và logarit", "Bất phương trình mũ và logarit", "Bài toán lãi suất ngân hàng"]
     },
     {
       "chapterName": "Chương 3: Nguyên hàm & Tích phân",
-      "milestones": ["Nguyên hàm", "Tích phân", "Ứng dụng tích phân tính diện tích, thể tích"]
+      "milestones": ["Định nghĩa và tính chất nguyên hàm", "Các phương pháp tính nguyên hàm (đổi biến, từng phần)", "Định nghĩa và tính chất tích phân", "Ứng dụng tích phân tính diện tích hình phẳng", "Ứng dụng tích phân tính thể tích vật thể tròn xoay"]
     },
     {
-      "chapterName": "Chương 4: Hình học không gian & Oxyz",
-      "milestones": ["Khối đa diện và thể tích", "Khối tròn xoay (Nón, Trụ, Cầu)", "Hệ tọa độ Oxyz trong không gian", "Phương trình mặt phẳng, đường thẳng, mặt cầu"]
+      "chapterName": "Chương 4: Số phức",
+      "milestones": ["Định nghĩa số phức, phần thực, phần ảo", "Các phép toán cộng, trừ, nhân, chia số phức", "Biểu diễn hình học của số phức", "Căn bậc hai và phương trình bậc hai số phức", "Cực trị số phức (Max/Min môđun)"]
+    },
+    {
+      "chapterName": "Chương 5: Hình học không gian & Oxyz",
+      "milestones": ["Thể tích khối đa diện (chóp, lăng trụ)", "Khối tròn xoay (Nón, Trụ, Cầu)", "Hệ tọa độ không gian Oxyz", "Phương trình mặt phẳng", "Phương trình đường thẳng", "Phương trình mặt cầu", "Góc và khoảng cách trong Oxyz"]
     }
   ],
   "Vật lý": [
     {
       "chapterName": "Chuyên đề 1: Dao động cơ",
-      "milestones": ["Dao động điều hòa", "Con lắc lò xo & Con lắc đơn", "Dao động tắt dần, cưỡng bức, cộng hưởng", "Tổng hợp dao động"]
+      "milestones": ["Dao động điều hòa (li độ, vận tốc, gia tốc)", "Con lắc lò xo (chu kì, năng lượng, lực đàn hồi)", "Con lắc đơn (chu kì, năng lượng, lực căng dây)", "Dao động tắt dần, duy trì, cưỡng bức, cộng hưởng", "Tổng hợp hai dao động điều hòa cùng phương cùng tần số"]
     },
     {
       "chapterName": "Chuyên đề 2: Sóng cơ & Sóng âm",
-      "milestones": ["Sự truyền sóng cơ", "Giao thoa sóng", "Sóng dừng", "Đặc trưng vật lý & sinh lý của âm"]
+      "milestones": ["Định nghĩa sóng cơ, phương trình truyền sóng", "Giao thoa sóng cơ (cực đại, cực tiểu)", "Sóng dừng (nút sóng, bụng sóng)", "Đặc trưng vật lý của âm (tần số, cường độ, mức âm)", "Đặc trưng sinh lý của âm (độ cao, độ to, âm sắc)"]
     },
     {
       "chapterName": "Chuyên đề 3: Dòng điện xoay chiều",
-      "milestones": ["Đại cương về dòng điện xoay chiều", "Mạch RLC mắc nối tiếp", "Công suất & Hệ số công suất", "Máy phát điện & Truyền tải điện năng"]
+      "milestones": ["Đại cương về dòng điện xoay chiều", "Mạch điện xoay chiều chỉ có R, L, C", "Mạch RLC mắc nối tiếp (phương pháp giản đồ Fre-nen)", "Công suất và hệ số công suất của mạch RLC", "Máy biến áp và truyền tải điện năng đi xa", "Máy phát điện xoay chiều và động cơ không đồng bộ ba pha"]
     },
     {
       "chapterName": "Chuyên đề 4: Dao động & Sóng điện từ",
-      "milestones": ["Mạch dao động LC", "Điện từ trường & Sóng điện từ", "Sự truyền thông tin bằng sóng vô tuyến"]
+      "milestones": ["Mạch dao động LC (dao động điện từ tự do)", "Điện từ trường và Sóng điện từ", "Sự truyền thông tin bằng sóng vô tuyến"]
+    },
+    {
+      "chapterName": "Chuyên đề 5: Sóng ánh sáng",
+      "milestones": ["Tán sắc ánh sáng qua lăng kính", "Nhiễu xạ và giao thoa ánh sáng (giao thoa khe Y-âng)", "Các loại quang phổ (liên tục, vạch phát xạ, hấp thụ)", "Tia hồng ngoại, tia tử ngoại, tia X (tính chất, ứng dụng)"]
+    },
+    {
+      "chapterName": "Chuyên đề 6: Lượng tử ánh sáng & Hạt nhân",
+      "milestones": ["Hiện tượng quang điện ngoài, thuyết lượng tử ánh sáng", "Hiện tượng quang điện trong, quang dẫn, quang điện trở", "Hiện tượng quang - phát quang và Mẫu nguyên tử Bo", "Tính chất và cấu tạo hạt nhân, độ hụt khối, năng lượng liên kết", "Phản ứng hạt nhân, hiện tượng phóng xạ, phân hạch, nhiệt hạch"]
     }
   ],
   "Hóa học": [
     {
       "chapterName": "Chuyên đề 1: Este - Lipit",
-      "milestones": ["Khái niệm, tính chất Este", "Chất béo (Lipit)", "Phản ứng xà phòng hóa & bài tập"]
+      "milestones": ["Cấu tạo và danh pháp Este", "Tính chất hóa học, vật lý Este", "Chất béo (Lipit) và vai trò sinh học", "Phản ứng xà phòng hóa chất béo", "Bài tập Este nâng cao (biện pháp quy đổi, sơ đồ hóa)"]
     },
     {
       "chapterName": "Chuyên đề 2: Cacbohidrat",
-      "milestones": ["Glucozơ & Fructozơ", "Saccarozơ, Tinh bột & Xenlulozơ"]
+      "milestones": ["Glucozơ và Fructozơ (monosaccarit)", "Saccarozơ (đisaccarit)", "Tinh bột và Xenlulozơ (polysaccarit)", "Tính chất hóa học và ứng dụng thực tiễn của Cacbohidrat"]
     },
     {
       "chapterName": "Chuyên đề 3: Amin, Amino Axit & Protein",
-      "milestones": ["Amin & Anilin", "Amino Axit & Peptit", "Protein & Enzim"]
+      "milestones": ["Khái niệm, phân loại và danh pháp Amin", "Tính chất vật lý, hóa học Amin", "Amino axit (khái niệm, tính chất lưỡng tính)", "Peptit và Protein (đặc điểm cấu tạo, phản ứng màu biure)", "Bài tập Peptit nâng cao"]
     },
     {
       "chapterName": "Chuyên đề 4: Polime & Vật liệu polime",
-      "milestones": ["Đại cương về Polime", "Chất dẻo, tơ, cao su & keo dán"]
+      "milestones": ["Khái niệm, phân loại polime (thiên nhiên, nhân tạo, tổng hợp)", "Các phản ứng điều chế (trùng hợp, trùng ngưng)", "Chất dẻo, tơ, cao su và keo dán thông dụng"]
+    },
+    {
+      "chapterName": "Chuyên đề 5: Đại cương kim loại",
+      "milestones": ["Vị trí, cấu tạo, tính chất vật lý của kim loại", "Tính chất hóa học chung của kim loại", "Dãy điện hóa của kim loại", "Hiện tượng ăn mòn kim loại (ăn mòn hóa học, điện hóa)", "Các phương pháp điều chế kim loại (nhiệt luyện, thủy luyện, điện phân)"]
+    },
+    {
+      "chapterName": "Chuyên đề 6: Kim loại kiềm, kiềm thổ, nhôm",
+      "milestones": ["Kim loại kiềm (Na, K...) và hợp chất", "Kim loại kiềm thổ (Ca, Mg...) và hợp chất", "Nước cứng (tác hại và phương pháp làm mềm)", "Nhôm (Al) và hợp chất (tính lưỡng tính của nhôm hiđroxit)"]
     }
   ],
   "Ngữ văn": [
     {
       "chapterName": "Phần 1: Đọc hiểu văn bản",
-      "milestones": ["Phương thức biểu đạt & Phong cách ngôn ngữ", "Thao tác lập luận & Biện pháp tu từ", "Phân tích cấu trúc tác dụng"]
+      "milestones": ["Xác định phương thức biểu đạt và phong cách ngôn ngữ", "Nhận diện và nêu tác dụng của các biện pháp tu từ", "Phân tích thao tác lập luận và cấu trúc văn bản", "Kỹ năng trả lời câu hỏi đọc hiểu đạt điểm tối đa"]
     },
     {
       "chapterName": "Phần 2: Nghị luận xã hội",
-      "milestones": ["Nghị luận về một tư tưởng đạo lý", "Nghị luận về một hiện tượng đời sống", "Kỹ năng viết đoạn văn 200 chữ"]
+      "milestones": ["Kỹ năng viết đoạn văn 200 chữ về tư tưởng đạo lý", "Kỹ năng viết đoạn văn 200 chữ về hiện tượng đời sống", "Lập dàn ý nhanh và liên hệ dẫn chứng thực tế"]
     },
     {
-      "chapterName": "Phần 3: Nghị luận văn học",
-      "milestones": ["Tác phẩm Thơ trọng tâm", "Tác phẩm Truyện & Kí trọng tâm", "Phần kịch & Ôn tập so sánh văn học"]
+      "chapterName": "Phần 3: Nghị luận văn học (Thơ)",
+      "milestones": ["Bài thơ Tây Tiến (Quang Dũng)", "Bài thơ Việt Bắc (Tố Hữu)", "Đoạn trích Đất Nước (Nguyễn Khoa Điềm)", "Bài thơ Sóng (Xuân Quỳnh)"]
+    },
+    {
+      "chapterName": "Phần 4: Nghị luận văn học (Truyện & Kí)",
+      "milestones": ["Người lái đò Sông Đà (Nguyễn Tuân)", "Ai đã đặt tên cho dòng sông (Hoàng Phủ Ngọc Tường)", "Truyện ngắn Vợ chồng A Phủ (Tô Hoài)", "Truyện ngắn Vợ nhặt (Kim Lân)", "Truyện ngắn Chiếc thuyền ngoài xa (Nguyễn Minh Châu)", "Vở kịch Hồn Trương Ba, da hàng thịt (Lưu Quang Vũ)"]
     }
   ],
   "Tiếng Anh": [
     {
-      "chapterName": "Ngữ pháp cốt lõi",
-      "milestones": ["12 Thì tiếng Anh", "Câu bị động & Câu gián tiếp", "Mệnh đề quan hệ & Điều kiện", "Động từ khuyết thiếu & So sánh"]
+      "chapterName": "Ngữ pháp nền tảng",
+      "milestones": ["12 Thì trong tiếng Anh và sự phối hợp thì", "Câu bị động (Passive Voice) cơ bản và đặc biệt", "Câu gián tiếp (Reported Speech)", "Mệnh đề quan hệ (Relative Clauses)", "Câu điều kiện (Conditional Sentences) và câu ước (Wish)", "Câu giả định (Subjunctive Mode) và Đảo ngữ (Inversion)"]
     },
     {
       "chapterName": "Từ vựng & Ngữ âm",
-      "milestones": ["Phát âm và Trọng âm", "Cụm động từ (Phrasal Verbs)", "Thành ngữ & Cụm từ cố định"]
+      "milestones": ["Quy tắc phát âm đuôi -s/es và -ed", "Quy tắc xác định trọng âm từ 2 và 3 âm tiết", "Cụm động từ thông dụng (Phrasal Verbs)", "Cụm từ cố định (Collocations) và Thành ngữ (Idioms)", "Từ đồng nghĩa & trái nghĩa (Synonyms & Antonyms)"]
     },
     {
-      "chapterName": "Kỹ năng đọc viết",
-      "milestones": ["Bài đọc điền từ", "Bài đọc hiểu tìm ý chính, suy luận", "Viết lại câu & Nối câu ghép"]
+      "chapterName": "Đọc hiểu & Kỹ năng viết",
+      "milestones": ["Kỹ năng đọc điền từ vào đoạn văn (Cloze Test)", "Kỹ năng đọc hiểu tìm ý chính, từ tham chiếu (Reading Comprehension)", "Kỹ năng đọc hiểu suy luận, tìm thông tin chi tiết", "Các dạng câu viết lại (Rewriting sentences) và nối câu (Combining sentences)"]
+    }
+  ],
+  "Sinh học": [
+    {
+      "chapterName": "Chương 1: Cơ chế di truyền và biến dị",
+      "milestones": ["Cấu trúc ADN, ARN và cơ chế nhân đôi ADN", "Quá trình phiên mã và dịch mã (tổng hợp protein)", "Điều hòa hoạt động gen (mô hình Operon Lac)", "Đột biến gen (khái niệm, các dạng, hậu quả)", "Đột biến nhiễm sắc thể (cấu trúc và số lượng)"]
+    },
+    {
+      "chapterName": "Chương 2: Quy luật di truyền",
+      "milestones": ["Quy luật Menđen (phân ly, phân ly độc lập)", "Tương tác gen và Tác động đa hiệu của gen", "Di truyền liên kết gen và Hoán vị gen", "Di truyền liên kết với giới tính và di truyền ngoài nhân", "Ảnh hưởng của môi trường lên sự biểu hiện của gen"]
+    },
+    {
+      "chapterName": "Chương 3: Sinh thái học & Tiến hóa",
+      "milestones": ["Học thuyết tiến hóa cổ điển (Lamac, Đacuyn) và hiện đại", "Các nhân tố tiến hóa (đột biến, giao phối, chọn lọc...)", "Quá trình hình thành loài mới và các bằng chứng tiến hóa", "Sinh thái học cá thể và quần thể sinh vật", "Sinh thái học quần xã và hệ sinh thái (chuỗi thức ăn, chu trình sinh địa hóa)"]
+    }
+  ],
+  "Lịch sử": [
+    {
+      "chapterName": "Chương 1: Lịch sử thế giới hiện đại",
+      "milestones": ["Liên Xô và các nước Đông Âu sau Thế chiến II", "Các nước Á, Phi, Mỹ Latinh phong trào giải phóng dân tộc", "Mỹ, Tây Âu, Nhật Bản (1945 - 2000)", "Quan hệ quốc tế (1945 - 2000) và Chiến tranh lạnh", "Cách mạng khoa học - công nghệ và xu thế toàn cầu hóa"]
+    },
+    {
+      "chapterName": "Chương 2: Lịch sử Việt Nam (1919 - 1945)",
+      "milestones": ["Việt Nam trong cuộc khai thác thuộc địa lần 2 của Pháp", "Phong trào dân tộc dân chủ (1919 - 1930) và vai trò Nguyễn Ái Quốc", "Đường lối thành lập Đảng Cộng sản Việt Nam (1930)", "Phong trào cách mạng (1930 - 1935) và (1936 - 1939)", "Cuộc vận động giải phóng dân tộc (1939 - 1945) và Cách mạng tháng Tám"]
+    },
+    {
+      "chapterName": "Chương 3: Lịch sử Việt Nam (1945 - 1975)",
+      "milestones": ["Kháng chiến chống thực dân Pháp (1945 - 1954)", "Chiến dịch Việt Bắc (1947), Biên giới (1950), Đông Xuân (1953 - 1954)", "Chiến thắng lịch sử Điện Biên Phủ (1954) và Hiệp định Giơ-ne-vơ", "Kháng chiến chống Mỹ cứu nước (1954 - 1975) giải phóng miền Nam", "Thắng lợi chiến dịch Hồ Chí Minh lịch sử (1975) và Hiệp định Paris (1973)"]
+    }
+  ],
+  "Địa lý": [
+    {
+      "chapterName": "Chương 1: Địa lý tự nhiên Việt Nam",
+      "milestones": ["Vị trí địa lý, phạm vi lãnh thổ nước ta", "Lịch sử hình thành và đặc điểm chung của địa hình Việt Nam", "Thiên nhiên nhiệt đới ẩm gió mùa và ảnh hưởng đối với sản xuất", "Phân hóa thiên nhiên (Bắc - Nam, Đông - Tây, Độ cao)", "Sử dụng và bảo vệ tài nguyên thiên nhiên, phòng chống thiên tai"]
+    },
+    {
+      "chapterName": "Chương 2: Địa lý dân cư & Các ngành kinh tế",
+      "milestones": ["Đặc điểm dân số, cơ cấu dân số và phân bố dân cư nước ta", "Quá trình đô thị hóa và ảnh hưởng của nó", "Chuyển dịch cơ cấu kinh tế Việt Nam", "Địa lý nông nghiệp (trồng trọt, chăn nuôi, thủy hải sản)", "Địa lý công nghiệp và các vùng công nghiệp", "Địa lý dịch vụ (giao thông vận tải, thông tin liên lạc, du lịch)"]
+    },
+    {
+      "chapterName": "Chương 3: Địa lý các vùng kinh tế",
+      "milestones": ["Trung du và miền núi Bắc Bộ (khoáng sản, thủy điện)", "Đồng bằng sông Hồng (vấn đề chuyển dịch cơ cấu kinh tế)", "Bắc Trung Bộ, Duyên hải Nam Trung Bộ (kinh tế biển)", "Tây Nguyên (phát triển cây công nghiệp lâu năm)", "Đông Nam Bộ (vùng kinh tế trọng điểm nhất)", "Đồng bằng sông Cửu Long (trọng điểm lương thực, thực phẩm)"]
     }
   ],
   "HSA (ĐHQG Hà Nội)": [
     {
       "chapterName": "Phần 1: Định lượng (Toán)",
-      "milestones": ["Toán phổ thông 10, 11, 12", "Thống kê và xác suất", "Bài toán ứng dụng thực tế"]
+      "milestones": ["Toán học phổ thông (Đại số, hình học, xác suất lớp 10, 11, 12)", "Giải quyết vấn đề (Bài toán thực tế, tối ưu hóa)", "Phân tích số liệu thống kê (Đọc hiểu biểu đồ, bảng biểu số liệu)"]
     },
     {
       "chapterName": "Phần 2: Định tính (Văn)",
-      "milestones": ["Đọc hiểu văn bản & kiến thức tiếng Việt", "Phân tích tác phẩm, điền từ chỗ trống", "Nhận diện lỗi sai trong câu"]
+      "milestones": ["Đọc hiểu văn bản văn học, nghị luận tiếng Việt", "Điền từ vào chỗ trống trong văn cảnh", "Nhận diện lỗi sai ngữ pháp, ngữ nghĩa trong câu tiếng Việt", "Hệ thống hóa kiến thức văn học lịch sử Việt Nam"]
     },
     {
       "chapterName": "Phần 3: Khoa học",
-      "milestones": ["Kiến thức cốt lõi Lý - Hóa", "Sinh học, Lịch sử, Địa lý tổng hợp", "Phân tích bảng số liệu & thông tin"]
+      "milestones": ["Kiến thức Vật lý tự nhiên liên môn (cơ, điện, quang học)", "Hóa học tự nhiên và đời sống thực tế", "Sinh học, Lịch sử Việt Nam và Địa lý vùng miền tổng hợp"]
     }
   ],
   "TSA (ĐH Bách Khoa)": [
     {
       "chapterName": "Phần 1: Tư duy Toán học",
-      "milestones": ["Đại số & Hình học nâng cao", "Logarit, tích phân & Xác suất", "Tư duy logic giải quyết vấn đề"]
+      "milestones": ["Kiến thức Toán học cao cấp phổ thông (hàm số, hình học, tích phân)", "Đại số ma trận cơ bản, xác suất thống kê chuyên sâu", "Đọc đồ thị phức tạp và mô hình hóa toán học"]
     },
     {
       "chapterName": "Phần 2: Tư duy Đọc hiểu",
-      "milestones": ["Đọc văn bản khoa học, kỹ thuật", "Phân tích, suy luận thông tin", "Đánh giá cấu trúc luận điểm văn bản"]
+      "milestones": ["Đọc hiểu văn bản khoa học, công nghệ tiếng Việt", "Phân tích logic, tìm lỗ hổng lập luận của tác giả", "Đánh giá, tổng hợp thông tin đa chiều từ nhiều nguồn văn bản"]
     },
     {
       "chapterName": "Phần 3: Tư duy Khoa học",
-      "milestones": ["Phân tích dữ liệu thực nghiệm", "Suy luận vật lý, hóa học thực nghiệm", "Tư duy hệ thống sinh học & công nghệ"]
+      "milestones": ["Phân tích dữ liệu thực nghiệm khoa học tự nhiên", "Suy luận logic từ các hiện tượng Vật lý - Hóa học thực tế", "Giải quyết các tình huống kỹ thuật giả định dựa trên nguyên lý cơ bản"]
     }
   ]
 };
