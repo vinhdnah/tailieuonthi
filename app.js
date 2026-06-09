@@ -23179,6 +23179,33 @@ function reclassifyTree(tree) {
   return newTree;
 }
 
+// Clean up redundant folder name prefixes from file names
+function cleanFileTreeNames(tree) {
+  if (!tree) return;
+  tree.forEach(category => {
+    if (!category.subjects) return;
+    category.subjects.forEach(subject => {
+      if (!subject.folders) return;
+      subject.folders.forEach(folder => {
+        if (!folder.files) return;
+        folder.files.forEach(file => {
+          const fNameLower = folder.folderName.toLowerCase().trim();
+          const fileNameLower = file.name.toLowerCase().trim();
+          
+          if (fileNameLower.startsWith(fNameLower)) {
+            let relativeName = file.name.substring(folder.folderName.length).trim();
+            // Remove leading/trailing hyphens, underscores, spaces, or parentheses
+            relativeName = relativeName.replace(/^[-_\s()]+|[-_\s()]+$/g, '').trim();
+            if (relativeName) {
+              file.name = relativeName;
+            }
+          }
+        });
+      });
+    });
+  });
+}
+
 // Migrate legacy 2-level localStorage format to new 3-level format
 function migrateData(oldData) {
   if (!oldData || oldData.length === 0) return [];
@@ -23315,14 +23342,17 @@ function loadData() {
         });
       });
       
+      cleanFileTreeNames(fileTreeData);
       saveData();
     } catch (e) {
       console.error("Lỗi khi tải dữ liệu từ localStorage, sử dụng mẫu mặc định", e);
       fileTreeData = reclassifyTree(DEFAULT_TREE);
+      cleanFileTreeNames(fileTreeData);
       saveData();
     }
   } else {
     fileTreeData = reclassifyTree(DEFAULT_TREE);
+    cleanFileTreeNames(fileTreeData);
     saveData();
   }
   updateFileCount();
@@ -23929,6 +23959,7 @@ function parseAndImportHTML(htmlString) {
   }
   
   if (importedCount > 0) {
+    cleanFileTreeNames(fileTreeData);
     saveData();
     renderTree();
     showToast('Đã nhập thành công ' + importedCount + ' tệp tin từ HTML!');
