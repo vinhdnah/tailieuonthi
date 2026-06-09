@@ -119,6 +119,9 @@
       <section id="viewer-panel" class="main-panel viewer-panel">
         <!-- Panel Header / Navigation / Details -->
         <div class="viewer-header">
+          <button id="btn-close-viewer" class="btn-close-panel" title="Đóng xem trước">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
           <div class="file-info">
             <h2 id="active-file-title">File Name.pdf</h2>
             <div class="file-meta">
@@ -129,17 +132,14 @@
           </div>
           
           <div class="viewer-actions">
-            <a id="btn-download-direct" href="#" target="_blank" class="btn btn-success">
+            <a id="btn-download-direct" href="#" target="_blank" class="btn btn-success" title="Tải xuống trực tiếp">
               <i class="fa-solid fa-circle-down"></i> <span class="btn-text">Tải xuống trực tiếp</span>
             </a>
-            <a id="btn-open-drive" href="#" target="_blank" class="btn btn-secondary">
+            <a id="btn-open-drive" href="#" target="_blank" class="btn btn-secondary" title="Mở Drive">
               <i class="fa-solid fa-arrow-up-right-from-square"></i> <span class="btn-text">Mở Drive</span>
             </a>
-            <button id="btn-copy-link" class="btn btn-accent">
+            <button id="btn-copy-link" class="btn btn-accent" title="Sao chép link tải">
               <i class="fa-regular fa-copy"></i> <span class="btn-text">Sao chép link tải</span>
-            </button>
-            <button id="btn-close-viewer" class="btn-close-panel" title="Đóng xem trước">
-              <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
         </div>
@@ -157,6 +157,9 @@
       <!-- Folder Details & Batch Download Panel -->
       <section id="folder-panel" class="main-panel folder-panel">
         <div class="viewer-header">
+          <button id="btn-close-folder" class="btn-close-panel" title="Đóng thư mục">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
           <div class="file-info">
             <h2 id="active-folder-title">Tên thư mục</h2>
             <div class="file-meta">
@@ -166,11 +169,8 @@
           </div>
           
           <div class="viewer-actions">
-            <button id="btn-download-folder" class="btn btn-success">
+            <button id="btn-download-folder" class="btn btn-success" title="Tải xuống toàn bộ thư mục">
               <i class="fa-solid fa-cloud-arrow-down"></i> <span class="btn-text">Tải xuống toàn bộ thư mục</span>
-            </button>
-            <button id="btn-close-folder" class="btn-close-panel" title="Đóng thư mục">
-              <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
         </div>
