@@ -1509,10 +1509,7 @@ body {
   }
 
   .file-meta {
-    gap: 6px !important;
-    flex-wrap: nowrap;
-    font-size: 10px !important;
-    overflow: hidden;
+    display: none !important;
   }
 
   /* Hide Drive ID on mobile */

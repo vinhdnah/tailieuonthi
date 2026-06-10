@@ -24761,16 +24761,19 @@ function switchAppMode(mode) {
     elWelcomeSelector.classList.add('active');
     elDocumentsApp.classList.remove('active');
     elRoadmapApp.classList.remove('active');
+    if (elThemeToggleFloating) elThemeToggleFloating.style.display = 'flex';
     elPreviewIframe.src = '';
   } else if (mode === 'documents') {
     elWelcomeSelector.classList.remove('active');
     elDocumentsApp.classList.add('active');
     elRoadmapApp.classList.remove('active');
+    if (elThemeToggleFloating) elThemeToggleFloating.style.display = 'none';
     renderTree(currentSearchQuery);
   } else if (mode === 'roadmap') {
     elWelcomeSelector.classList.remove('active');
     elDocumentsApp.classList.remove('active');
     elRoadmapApp.classList.add('active');
+    if (elThemeToggleFloating) elThemeToggleFloating.style.display = 'none';
     renderRoadmapSubjectsSidebar();
     selectRoadmapTab(currentRoadmapTab);
     updateRoadmapProgress();
