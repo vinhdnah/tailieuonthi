@@ -23150,20 +23150,29 @@ async function autoSyncFileName(driveId) {
   }
 }
 
+// Helper to identify generic names that need syncing
+function isGenericFileName(name) {
+  if (!name) return false;
+  // Remove file extension (e.g. .pdf, .docx, .mp4) before checking
+  const cleanName = name.replace(/\.[a-zA-Z0-9]+$/, '').trim();
+  
+  // Generic Vietnamese/English academic patterns
+  const genericPattern = /^(t[ệe]p\s*\d+|file\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin|b[àa]i\s*\d+|đ[ềe]\s*\d+|đ[áa]p\s*án\s*\d+|video\s*\d+|doc\s*\d+|document\s*\d+|chuy[êe]n\s*đ[ềe]\s*\d+|b[àa]i\s*gi[ảả]ng\s*\d+)$/i;
+  
+  return genericPattern.test(cleanName);
+}
+
 // Priority automatic sync for generic files in selected folder
 async function syncFolderFilesImmediate(folder) {
   if (!folder || !folder.files) return;
   
-  const genericFiles = folder.files.filter(file => 
-    /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(file.name.trim())
-  );
+  const genericFiles = folder.files.filter(file => isGenericFileName(file.name));
   
   if (genericFiles.length === 0) return;
   
   for (const file of genericFiles) {
     // Only fetch if still generic
-    const isStillGeneric = /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(file.name.trim());
-    if (!isStillGeneric) continue;
+    if (!isGenericFileName(file.name)) continue;
     
     const newName = await fetchFileNameFromDrive(file.driveId);
     if (newName) {
@@ -23184,8 +23193,7 @@ async function startBackgroundSyncAll() {
     category.subjects.forEach(subject => {
       subject.folders.forEach(folder => {
         folder.files.forEach(file => {
-          const isGenericName = /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(file.name.trim());
-          if (isGenericName) {
+          if (isGenericFileName(file.name)) {
             genericFiles.push({ driveId: file.driveId, file });
           }
         });
@@ -23199,8 +23207,7 @@ async function startBackgroundSyncAll() {
   
   for (const item of genericFiles) {
     // Check if name is still generic (might have been updated by folder select or manual sync)
-    const isStillGeneric = /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(item.file.name.trim());
-    if (!isStillGeneric) continue;
+    if (!isGenericFileName(item.file.name)) continue;
     
     const newName = await fetchFileNameFromDrive(item.driveId);
     if (newName) {
@@ -23229,8 +23236,8 @@ function extractGoogleDriveId(url) {
   let match = url.match(/[?&]id=([a-zA-Z0-9_-]{25,50})/);
   if (match) return match[1];
   
-  // 2. Check for path parameter /file/d/ID/...
-  match = url.match(/\/file\/d\/([a-zA-Z0-9_-]{25,50})/);
+  // 2. Check for path parameter /d/ID/... (matches /file/d/, /document/d/, /spreadsheets/d/, etc.)
+  match = url.match(/\/d\/([a-zA-Z0-9_-]{25,50})/);
   if (match) return match[1];
   
   // 3. Check for drive/folders/ID (in case someone pastes a folder link - we can mark it or extract, but usually this is for files)
@@ -24143,8 +24150,7 @@ function selectFile(file, folderName, pushState = true) {
   }
 
   // Trigger background automatic name sync if it's a generic name
-  const isGenericName = /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(file.name.trim());
-  if (isGenericName) {
+  if (isGenericFileName(file.name)) {
     autoSyncFileName(file.driveId);
   }
 }
