@@ -23021,6 +23021,136 @@ const ROADMAP_PHASES = [
 
 // --- Helper Functions ---
 
+// Fetch file name from Google Drive public page via AllOrigins proxy
+async function fetchFileNameFromDrive(driveId) {
+  try {
+    const targetUrl = `https://drive.google.com/file/d/${driveId}/view`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 seconds timeout
+    
+    const response = await fetch(proxyUrl, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) throw new Error('Proxy response error');
+    const data = await response.json();
+    const html = data.contents;
+    if (!html) throw new Error('Proxy returned empty contents');
+    
+    let title = '';
+    
+    // 1. og:title
+    const ogMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["'](.*?)["']/i) || 
+                    html.match(/<meta\s+content=["'](.*?)["']\s+property=["']og:title["']/i);
+    if (ogMatch && ogMatch[1]) {
+      title = ogMatch[1];
+    }
+    
+    // 2. <title> tag
+    if (!title) {
+      const titleMatch = html.match(/<title>(.*?)<\/title>/i);
+      if (titleMatch && titleMatch[1]) {
+        title = titleMatch[1];
+      }
+    }
+    
+    if (title) {
+      title = title.replace(/\s*-\s*Google\s*Drive/gi, '')
+                   .replace(/\s*-\s*Google\s*trình\s*xem.*/gi, '')
+                   .trim();
+                   
+      if (title && 
+          !title.includes('Google Drive - Virus scan warning') && 
+          !title.includes('Sign-in') && 
+          !title.includes('Đăng nhập') &&
+          !title.toLowerCase().includes('google drive')) {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = title;
+        return txt.value.trim();
+      }
+    }
+  } catch (err) {
+    console.error('Lỗi khi lấy tên file từ Drive:', err);
+  }
+  return null;
+}
+
+// Update file name in fileTreeData database and save
+function updateFileName(driveId, newName) {
+  let updated = false;
+  fileTreeData.forEach(category => {
+    category.subjects.forEach(subject => {
+      subject.folders.forEach(folder => {
+        folder.files.forEach(file => {
+          if (file.driveId === driveId) {
+            file.name = newName;
+            updated = true;
+          }
+        });
+      });
+    });
+  });
+  if (updated) {
+    saveData();
+    updateFolderPanelFileNames();
+  }
+  return updated;
+}
+
+// Refresh the folder details panel file names if active
+function updateFolderPanelFileNames() {
+  if (activeFolder && elFolderPanel.classList.contains('active')) {
+    selectFolder(activeFolder, false);
+  }
+}
+
+// Trigger manual sync
+async function syncActiveFileName() {
+  if (!activeFile) return;
+  const driveId = activeFile.driveId;
+  const btnSyncName = document.getElementById('btn-sync-name');
+  if (!btnSyncName) return;
+  const originalHtml = btnSyncName.innerHTML;
+  
+  btnSyncName.disabled = true;
+  btnSyncName.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span class="btn-text">Đang đồng bộ...</span>';
+  
+  showToast("Đang kết nối tới Google Drive...");
+  const newName = await fetchFileNameFromDrive(driveId);
+  
+  if (newName) {
+    const updated = updateFileName(driveId, newName);
+    if (updated) {
+      activeFile.name = newName;
+      elActiveFileTitle.textContent = newName;
+      showToast("Đồng bộ tên file thành công!");
+    } else {
+      showToast("Lỗi khi cập nhật tên file vào cơ sở dữ liệu!", "error");
+    }
+  } else {
+    showToast("Không lấy được tên từ Drive. Hãy kiểm tra quyền chia sẻ công khai của file.", "error");
+  }
+  
+  btnSyncName.disabled = false;
+  btnSyncName.innerHTML = originalHtml;
+}
+
+// Trigger background automatic sync
+async function autoSyncFileName(driveId) {
+  const newName = await fetchFileNameFromDrive(driveId);
+  if (newName && activeFile && activeFile.driveId === driveId) {
+    const updated = updateFileName(driveId, newName);
+    if (updated) {
+      activeFile.name = newName;
+      if (elActiveFileTitle && elActiveFileTitle.textContent !== newName) {
+        elActiveFileTitle.textContent = newName;
+      }
+      showToast(`Đã tự động cập nhật tên file: ${newName}`);
+    }
+  }
+}
+
 // Google Drive URL ID Parser
 function extractGoogleDriveId(url) {
   if (!url) return null;
@@ -23943,6 +24073,12 @@ function selectFile(file, folderName, pushState = true) {
 
   if (pushState) {
     history.pushState({ panel: 'file', file: file, folderName: folderName }, '');
+  }
+
+  // Trigger background automatic name sync if it's a generic name
+  const isGenericName = /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(file.name.trim());
+  if (isGenericName) {
+    autoSyncFileName(file.driveId);
   }
 }
 
@@ -24998,6 +25134,11 @@ function initEventListeners() {
       showToast("Lỗi khi sao chép link!", "error");
     });
   });
+
+  const btnSyncName = document.getElementById('btn-sync-name');
+  if (btnSyncName) {
+    btnSyncName.addEventListener('click', syncActiveFileName);
+  }
   
   elBtnClearAll.addEventListener('click', () => {
     if (confirm("Bạn có chắc chắn muốn xóa toàn bộ danh sách file? Hành động này không thể hoàn tác.")) {
