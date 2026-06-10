@@ -22768,7 +22768,7 @@ const elTodoList = document.getElementById('todo-list');
 
 // State Variables
 let activeMode = 'selector'; // 'selector' | 'documents' | 'roadmap'
-let activeTheme = 'dark'; // 'dark' | 'light'
+let activeTheme = 'light'; // 'dark' | 'light'
 let currentRoadmapTab = 'phases'; // 'phases' | 'todos' | subjectName
 let roadmapProgress = {}; // key -> boolean
 let roadmapTodos = []; // array of todo objects
@@ -24728,7 +24728,7 @@ function closeModal() {
 // --- Theme & Mode Management ---
 
 function initAppTheme() {
-  const savedTheme = localStorage.getItem('theme') || 'dark';
+  const savedTheme = localStorage.getItem('theme') || 'light';
   activeTheme = savedTheme;
   
   if (savedTheme === 'light') {
