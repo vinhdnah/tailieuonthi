@@ -23025,7 +23025,7 @@ const ROADMAP_PHASES = [
 async function fetchFileNameFromDrive(driveId) {
   try {
     const targetUrl = `https://drive.google.com/file/d/${driveId}/view`;
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 seconds timeout
@@ -23034,8 +23034,7 @@ async function fetchFileNameFromDrive(driveId) {
     clearTimeout(timeoutId);
     
     if (!response.ok) throw new Error('Proxy response error');
-    const data = await response.json();
-    const html = data.contents;
+    const html = await response.text();
     if (!html) throw new Error('Proxy returned empty contents');
     
     let title = '';
