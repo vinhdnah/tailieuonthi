@@ -79,7 +79,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "4. EBOOOOK STEP 4 TỔNG ÔN VÀ LUYỆN ĐỀ TOÁN 12 SEASON 2026, CÔ NGỌC HUYỀN LB",
+            "folderName": "4. EBOOOOK STEP 4 TỔNG ÔN VÀ LUYỆN ĐỀ TOÁN 12 SEASON 2026 - Cô Ngọc Huyền LB",
             "files": [
               {
                 "name": "4. EBOOOOK STEP 4 TỔNG ÔN VÀ LUYỆN ĐỀ TOÁN 12 SEASON 2026, CÔ NGỌC HUYỀN LB",
@@ -1214,7 +1214,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "30 NGÀY TỔNG ÔN CẤP TỐC VẬT LÍ 12 - THẦY VNA MAPSTUDY",
+            "folderName": "30 NGÀY TỔNG ÔN CẤP TỐC VẬT LÍ 12 - Thầy VNA Mapstudy",
             "files": [
               {
                 "name": "30 NGÀY TỔNG ÔN CẤP TỐC VẬT LÍ 12 - THẦY VNA MAPSTUDY",
@@ -1244,7 +1244,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SÁCH TỔNG ÔN VẬT LÝ 12 KÌ THI TN THPTQG, THẦY VŨ HOÀNG QUÂN",
+            "folderName": "EBOOK SÁCH TỔNG ÔN VẬT LÝ 12 KÌ THI TN THPTQG - Thầy Vũ Hoàng Quân",
             "files": [
               {
                 "name": "EBOOK SÁCH TỔNG ÔN VẬT LÝ 12 KÌ THI TN THPTQG, THẦY VŨ HOÀNG QUÂN",
@@ -1314,7 +1314,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK PHÁC ĐỒ SINH VỀ ĐÍCH KÈM KHOÁ HỌC, THẦY TRƯƠNG CÔNG KIÊN",
+            "folderName": "EBOOK PHÁC ĐỒ SINH VỀ ĐÍCH KÈM KHOÁ HỌC - Thầy Trương Công Kiên",
             "files": [
               {
                 "name": "EBOOK PHÁC ĐỒ SINH VỀ ĐÍCH KÈM KHOÁ HỌC, THẦY TRƯƠNG CÔNG KIÊN",
@@ -1324,7 +1324,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK PHÁC ĐỒ SINH VỀ ĐÍCH SÁCH THAM KHẢO, THẦY TRƯƠNG CÔNG KIÊN",
+            "folderName": "EBOOK PHÁC ĐỒ SINH VỀ ĐÍCH SÁCH THAM KHẢO - Thầy Trương Công Kiên",
             "files": [
               {
                 "name": "EBOOK PHÁC ĐỒ SINH VỀ ĐÍCH SÁCH THAM KHẢO, THẦY TRƯƠNG CÔNG KIÊN",
@@ -1404,7 +1404,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "12 Ngày Ôn Cấp Tốc - Văn Cô Sương Mai",
+            "folderName": "12 Ngày Ôn Cấp Tốc - Văn - Cô Sương Mai",
             "files": [
               {
                 "name": "[HVCSM] Kĩ năng đọc hiểu ngữ liệu thuộc dạng văn bản nghị luận.pdf",
@@ -2269,7 +2269,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK LÀM CHỦ KIẾN THỨC TRỌNG TÂM THI TỐT NGHIỆP VÀ ĐGNL MÔN LỊCH SỬ, TRẠM 1 - LIVE C CÔ NGUYỄN HƯƠNG SEN 2K8",
+            "folderName": "EBOOK LÀM CHỦ KIẾN THỨC TRỌNG TÂM THI TỐT NGHIỆP VÀ ĐGNL MÔN LỊCH SỬ, TRẠM 1 - LIVE C - Cô Nguyễn Hương Sen",
             "files": [
               {
                 "name": "EBOOK LÀM CHỦ KIẾN THỨC TRỌNG TÂM THI TỐT NGHIỆP VÀ ĐGNL MÔN LỊCH SỬ, TRẠM 1 - LIVE C CÔ NGUYỄN HƯƠNG SEN 2K8",
@@ -2384,7 +2384,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Về Đích (Sử 12) Cô Sen",
+            "folderName": "Về Đích (Sử 12) - Cô Nguyễn Hương Sen",
             "files": [
               {
                 "name": "ĐỀ SỐ 1 - KHÓA VỀ ĐÍCH.pdf",
@@ -2424,7 +2424,7 @@ const DEFAULT_TREE = [
         "subjectName": "Địa lý",
         "folders": [
           {
-            "folderName": "CẤP TỐC VỀ ĐÍCH Địa Lí 12 - thầy Tùng Atschool",
+            "folderName": "CẤP TỐC VỀ ĐÍCH Địa Lí 12 - Thầy Tùng Atschool",
             "files": [
               {
                 "name": "TÀI LIỆU TÔNG HỢP VÙNG KINH TẾ.pdf",
@@ -2834,7 +2834,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "CẤP TỐC 14 NGÀY - thầy Vũ Ngọc Anh",
+            "folderName": "CẤP TỐC 14 NGÀY - Thầy Vũ Ngọc Anh",
             "files": [
               {
                 "name": "Tài liệu Ngày 1-2-3 _ Khoá 14 Ngày.pdf",
@@ -2874,7 +2874,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK TRỌNG TÂM KIẾN THỨC ÔN THI TỐT NGHIỆP PHỔ THÔNG MÔN TIẾNG ANH, CÔ TRANG ANH",
+            "folderName": "EBOOK TRỌNG TÂM KIẾN THỨC ÔN THI TỐT NGHIỆP PHỔ THÔNG MÔN TIẾNG ANH - Cô Trang Anh",
             "files": [
               {
                 "name": "EBOOK TRỌNG TÂM KIẾN THỨC ÔN THI TỐT NGHIỆP PHỔ THÔNG MÔN TIẾNG ANH, CÔ TRANG ANH",
@@ -2884,7 +2884,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Luyện đề & tổng ôn trọng điểm Tiếng Anh 8+ PDF Cô Phạm Liễu",
+            "folderName": "Luyện đề & tổng ôn trọng điểm Tiếng Anh 8+ PDF - Cô Phạm Liễu",
             "files": [
               {
                 "name": "Luyện đề & tổng ôn trọng điểm Tiếng Anh 8+ PDF Cô Phạm Liễu",
@@ -2894,7 +2894,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Luyện Đề Và Tổng Ôn Trọng Điểm Môn Tiếng Anh 9+ Chương Trình Mới (Cô Phạm Liễu)",
+            "folderName": "Luyện Đề Và Tổng Ôn Trọng Điểm Môn Tiếng Anh 9+ Chương Trình Mới - Cô Phạm Liễu",
             "files": [
               {
                 "name": "Luyện Đề Và Tổng Ôn Trọng Điểm Môn Tiếng Anh 9+ Chương Trình Mới (Cô Phạm Liễu)",
@@ -2954,7 +2954,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "7 NGÀY CẤP TỐC VỀ ĐÍCH [SIÊU VIP] - TYHH",
+            "folderName": "7 NGÀY CẤP TỐC VỀ ĐÍCH [SIÊU VIP] - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "21 30 - THI THỬ ONLINE ĐỀ VỀ ĐÍCH 01.mp4",
@@ -3799,7 +3799,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Ôn tập trọng tâm về đích thành công - thầy Nghệ",
+            "folderName": "Ôn tập trọng tâm về đích thành công - Thầy Phan Khắc Nghệ",
             "files": [
               {
                 "name": "ảnh này thầy đăng lẻ.pdf",
@@ -9439,7 +9439,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Sổ Tay Tổng Hợp Kiến Thức Môn Toán Lớp 12 (Thầy Nguyễn Phan Tiến)",
+            "folderName": "Sổ Tay Tổng Hợp Kiến Thức Môn Toán Lớp 12 - Thầy Nguyễn Phan Tiến",
             "files": [
               {
                 "name": "Sổ Tay Tổng Hợp Kiến Thức Môn Toán Lớp 12 (Thầy Nguyễn Phan Tiến)",
@@ -12314,7 +12314,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SÁCH TỔNG ÔN VẬT LÝ 12 THẦY VŨ HOÀNG QUÂN",
+            "folderName": "EBOOK SÁCH TỔNG ÔN VẬT LÝ 12 - Thầy Vũ Hoàng Quân",
             "files": [
               {
                 "name": "EBOOK SÁCH TỔNG ÔN VẬT LÝ 12 THẦY VŨ HOÀNG QUÂN",
@@ -12324,7 +12324,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SỔ TAY CÔNG THỨC VẬT LÝ 12, LÝ THẦY QUÂN",
+            "folderName": "EBOOK SỔ TAY CÔNG THỨC VẬT LÝ 12 - Thầy Vũ Hoàng Quân",
             "files": [
               {
                 "name": "EBOOK SỔ TAY CÔNG THỨC VẬT LÝ 12, LÝ THẦY QUÂN",
@@ -12334,7 +12334,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SỔ TAY CÔNG THỨC VẬT LÝ 12, THẦY VŨ HOÀNG QUÂN",
+            "folderName": "EBOOK SỔ TAY CÔNG THỨC VẬT LÝ 12 - Thầy Vũ Hoàng Quân",
             "files": [
               {
                 "name": "EBOOK SỔ TAY CÔNG THỨC VẬT LÝ 12, THẦY VŨ HOÀNG QUÂN",
@@ -12644,7 +12644,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "SỔ TAY LÝ THUYẾT HÓA 12 - TYHH",
+            "folderName": "SỔ TAY LÝ THUYẾT HÓA 12 - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "SỔ TAY LÝ THUYẾT HÓA 12 - TYHH",
@@ -12969,7 +12969,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Tổng ôn CHƯƠNG VẬT LÍ HẠT NHÂN - thầy Vũ Ngọc Anh",
+            "folderName": "Tổng ôn CHƯƠNG VẬT LÍ HẠT NHÂN - Thầy Vũ Ngọc Anh",
             "files": [
               {
                 "name": "BUOI-2~2.PDF",
@@ -13044,7 +13044,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Tổng ôn CHƯƠNG VẬT LÝ NHIỆT - thầy Vũ Ngọc Anh",
+            "folderName": "Tổng ôn CHƯƠNG VẬT LÝ NHIỆT - Thầy Vũ Ngọc Anh",
             "files": [
               {
                 "name": "buoi-1---dap-an-viet-tay-1741411988168.pdf",
@@ -13424,7 +13424,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "ĐỀ TỔNG ÔN TOÀN DIỆN HỮU CƠ 12 - TYHH",
+            "folderName": "ĐỀ TỔNG ÔN TOÀN DIỆN HỮU CƠ 12 - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "tong-on-toan-dien-huu-co-12-ngay-1-656d604c-9c01-4932-a959-6b72bf77a9b2.pdf",
@@ -13609,7 +13609,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK TỔNG ÔN TOÀN DIỆN LÝ THUYẾT HOÁ HỌC 12, THẦY PHẠM VĂN TRỌNG",
+            "folderName": "EBOOK TỔNG ÔN TOÀN DIỆN LÝ THUYẾT HOÁ HỌC 12 - Thầy Phạm Văn Trọng",
             "files": [
               {
                 "name": "EBOOK TỔNG ÔN TOÀN DIỆN LÝ THUYẾT HOÁ HỌC 12, THẦY PHẠM VĂN TRỌNG",
@@ -14089,7 +14089,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN CHUYÊN ĐỀ TRỌNG TÂM HÓA 12 - TYHH",
+            "folderName": "TỔNG ÔN CHUYÊN ĐỀ TRỌNG TÂM HÓA 12 - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "hoi-uc-the-dien-cuc-chuan-kim-loai-71f6bf76-ff69-4e0c-b02c-852ec8c20a50.pdf",
@@ -14259,7 +14259,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN HÓA 12 - TỪ A đến Z - TYHH 2025",
+            "folderName": "TỔNG ÔN HÓA 12 - TỪ A đến Z - Thầy Phạm Thắng (TYHH) 2025",
             "files": [
               {
                 "name": "TỔNG ÔN HÓA 12 - TỪ A đến Z - TYHH 2025",
@@ -14339,7 +14339,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Tổng Ôn Toàn Diện Lý Thuyết Hóa Học 12 (Thầy Phạm Văn Trọng)",
+            "folderName": "Tổng Ôn Toàn Diện Lý Thuyết Hóa Học 12 - Thầy Phạm Văn Trọng",
             "files": [
               {
                 "name": "Tổng Ôn Toàn Diện Lý Thuyết Hóa Học 12 (Thầy Phạm Văn Trọng)",
@@ -14349,7 +14349,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Tổng Ôn Từ A-Z Hóa Học 12 (Thầy Phạm Thắng TYHH)",
+            "folderName": "Tổng Ôn Từ A-Z Hóa Học 12 - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "Tổng Ôn Từ A-Z Hóa Học 12 (Thầy Phạm Thắng TYHH)",
@@ -14684,7 +14684,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Tổng ôn Nền tảng Sinh học 11 & 12 - thầy Nghệ",
+            "folderName": "Tổng ôn Nền tảng Sinh học 11 & 12 - Thầy Phan Khắc Nghệ",
             "files": [
               {
                 "name": "Bài 1 Tổng ôn di truyền phân tử - Đáp Án.pdf",
@@ -14739,7 +14739,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN TRỌNG TÂM SINH HỌC - THẦY PHAN KHẮC NGHỆ",
+            "folderName": "TỔNG ÔN TRỌNG TÂM SINH HỌC - Thầy Phan Khắc Nghệ",
             "files": [
               {
                 "name": "Bài 1- Trao đổi chất và chuyển hóa năng lượng ở thực vật.pdf",
@@ -15424,7 +15424,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SƠ ĐỒ TƯ DUY NGỮ VĂN LỚP 12, THẦY PHẠM MINH NHẬT",
+            "folderName": "EBOOK SƠ ĐỒ TƯ DUY NGỮ VĂN LỚP 12 - Thầy Phạm Minh Nhật",
             "files": [
               {
                 "name": "EBOOK SƠ ĐỒ TƯ DUY NGỮ VĂN LỚP 12, THẦY PHẠM MINH NHẬT",
@@ -15604,7 +15604,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN KIẾN THỨC NGỮ VĂN 12 PHẠM MINH NHẬT",
+            "folderName": "TỔNG ÔN KIẾN THỨC NGỮ VĂN 12 - Thầy Phạm Minh Nhật",
             "files": [
               {
                 "name": "TỔNG ÔN KIẾN THỨC NGỮ VĂN 12 PHẠM MINH NHẬT",
@@ -15914,7 +15914,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Sơ Đồ Tư Duy Lịch Sử 12 Lớp Sử Cô Sen",
+            "folderName": "Sơ Đồ Tư Duy Lịch Sử 12 Lớp Sử - Cô Nguyễn Hương Sen",
             "files": [
               {
                 "name": "Sơ Đồ Tư Duy Lịch Sử 12 Lớp Sử Cô Sen",
@@ -16639,7 +16639,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SƠ ĐỒ TƯ DUY ĐỊA LÍ 12 Cô Mai Anh 2026",
+            "folderName": "EBOOK SƠ ĐỒ TƯ DUY ĐỊA LÍ 12 - Cô Hoàng Thị Mai Anh",
             "files": [
               {
                 "name": "EBOOK SƠ ĐỒ TƯ DUY ĐỊA LÍ 12 Cô Mai Anh 2026",
@@ -16889,7 +16889,7 @@ const DEFAULT_TREE = [
         "subjectName": "Tiếng Anh",
         "folders": [
           {
-            "folderName": "[Full Video] Trọng Tâm Kiến Thức Ôn Thi Thpt Môn Tiếng Anh (Cô Trang Anh)",
+            "folderName": "[Full Video] Trọng Tâm Kiến Thức Ôn Thi Thpt Môn Tiếng Anh - Cô Trang Anh",
             "files": [
               {
                 "name": "Trọng Tâm Kiến Thức Ôn Thi Thpt Môn Tiếng Anh (Cô Trang Anh).pdf",
@@ -17939,7 +17939,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK TRỌNG TÂM KIẾN THỨC ÔN THI THPT MÔN TIẾNG ANH, CÔ TRANG ANH",
+            "folderName": "EBOOK TRỌNG TÂM KIẾN THỨC ÔN THI THPT MÔN TIẾNG ANH - Cô Trang Anh",
             "files": [
               {
                 "name": "EBOOK TRỌNG TÂM KIẾN THỨC ÔN THI THPT MÔN TIẾNG ANH, CÔ TRANG ANH",
@@ -18054,7 +18054,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Tổng ôn chương KHÍ LÍ TƯỞNG - thầy Vũ Ngọc Anh",
+            "folderName": "Tổng ôn chương KHÍ LÍ TƯỞNG - Thầy Vũ Ngọc Anh",
             "files": [
               {
                 "name": "buoi-17---dap-an-viet-tay-1743609810371.pdf",
@@ -18129,7 +18129,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Tổng ôn CHƯƠNG TỪ TRƯỜNG - thầy Vũ Ngọc Anh",
+            "folderName": "Tổng ôn CHƯƠNG TỪ TRƯỜNG - Thầy Vũ Ngọc Anh",
             "files": [
               {
                 "name": "1. Buổi 25 - Ôn tập Lý Thuyết Từ Trường (Buổi 1).mp4",
@@ -18214,7 +18214,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN NGỮ PHÁP TIẾNG ANH 12 Cô Trang Anh",
+            "folderName": "TỔNG ÔN NGỮ PHÁP TIẾNG ANH 12 - Cô Trang Anh",
             "files": [
               {
                 "name": "TỔNG ÔN NGỮ PHÁP TIẾNG ANH 12 Cô Trang Anh",
@@ -20789,7 +20789,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SỔ TAY TỔNG HỢP KIẾN THỨC MÔN LỚP 12, THẦY NGUYỄN PHAN TIẾN",
+            "folderName": "EBOOK SỔ TAY TỔNG HỢP KIẾN THỨC MÔN LỚP 12 - Thầy Nguyễn Phan Tiến",
             "files": [
               {
                 "name": "EBOOK SỔ TAY TỔNG HỢP KIẾN THỨC MÔN LỚP 12, THẦY NGUYỄN PHAN TIẾN",
@@ -21064,7 +21064,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG HỢP 10 CHỦ ĐỀ TỪ VỰNG TRỌNG TÂM THI TN THPT - CÔ PHẠM LIỄU",
+            "folderName": "TỔNG HỢP 10 CHỦ ĐỀ TỪ VỰNG TRỌNG TÂM THI TN THPT - Cô Phạm Liễu",
             "files": [
               {
                 "name": "TỔNG HỢP 10 CHỦ ĐỀ TỪ VỰNG TRỌNG TÂM THI TN THPT - CÔ PHẠM LIỄU",
@@ -21074,7 +21074,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN TRỌNG TÂM - KNOCK OUT - cô Ngọc Huyền LB",
+            "folderName": "TỔNG ÔN TRỌNG TÂM - KNOCK OUT - Cô Ngọc Huyền LB",
             "files": [
               {
                 "name": "_NGCHU~1.PDF",
@@ -21254,7 +21254,7 @@ const DEFAULT_TREE = [
         "subjectName": "Vật lý",
         "folders": [
           {
-            "folderName": "Tổng ôn VẬT LÝ 10 - VẬT LÝ 11 - thầy Vũ Ngọc Anh",
+            "folderName": "Tổng ôn VẬT LÝ 10 - VẬT LÝ 11 - Thầy Vũ Ngọc Anh",
             "files": [
               {
                 "name": "buoi-9---dap-an-viet-tay-1742354174575.pdf",
@@ -21299,7 +21299,7 @@ const DEFAULT_TREE = [
         "subjectName": "Hóa học",
         "folders": [
           {
-            "folderName": "TỔNG ÔN CHUYÊN ĐỀ TRỌNG TÂM HÓA 10 - TYHH",
+            "folderName": "TỔNG ÔN CHUYÊN ĐỀ TRỌNG TÂM HÓA 10 - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "chuyen-de-cau-tao-nguyen-tu-30c25c72-4031-4772-b8fb-f1b9d3933b66.pdf",
@@ -21359,7 +21359,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN CHUYÊN ĐỀ TRỌNG TÂM HÓA 11 - TYHH",
+            "folderName": "TỔNG ÔN CHUYÊN ĐỀ TRỌNG TÂM HÓA 11 - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "chuyen-de-can-bang-hoa-hoc-5c46b1bb-fe85-4417-8175-3eff8b3fdfe3.pdf",
@@ -21654,7 +21654,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Tổng ôn MÔ HÌNH VẬT LÝ THỰC TẾ - thầy Vũ Ngọc Anh",
+            "folderName": "Tổng ôn MÔ HÌNH VẬT LÝ THỰC TẾ - Thầy Vũ Ngọc Anh",
             "files": [
               {
                 "name": "buoi-27---dap-an-viet-tay-1744999016441.pdf",
@@ -21724,7 +21724,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK TRỌNG TÂM HOÁ HỌC TẬP 1 HỮU CƠ, THẦY THẮNG TYHH",
+            "folderName": "EBOOK TRỌNG TÂM HOÁ HỌC TẬP 1 HỮU CƠ, THẦY THẮNG - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "EBOOK TRỌNG TÂM HOÁ HỌC TẬP 1 HỮU CƠ, THẦY THẮNG TYHH",
@@ -21734,7 +21734,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK TRỌNG TÂM HOÁ HỌC TẬP 2 VÔ CƠ, THẦY THẮNG TYHH",
+            "folderName": "EBOOK TRỌNG TÂM HOÁ HỌC TẬP 2 VÔ CƠ, THẦY THẮNG - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "EBOOK TRỌNG TÂM HOÁ HỌC TẬP 2 VÔ CƠ, THẦY THẮNG TYHH",
@@ -21794,7 +21794,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN TRỌNG TÂM KIẾN THỨC NỀN HỮU CƠ (Đầu năm) - TYHH",
+            "folderName": "TỔNG ÔN TRỌNG TÂM KIẾN THỨC NỀN HỮU CƠ (Đầu năm) - Thầy Phạm Thắng (TYHH)",
             "files": [
               {
                 "name": "tong-on-trong-tam-alkane-608fe0fb-0e6f-410a-9e18-9a688150b074.pdf",
@@ -21854,7 +21854,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Bộ Sách Tổng Ôn Sinh Học Thầy Nghệ",
+            "folderName": "Bộ Sách Tổng Ôn Sinh Học - Thầy Phan Khắc Nghệ",
             "files": [
               {
                 "name": "Tổng ôn Sinh học 1.pdf",
@@ -21869,7 +21869,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SỔ TAY NHẬP MÔN SINH HỌC, CÔ NGUYỄN VŨ TRÀ MY",
+            "folderName": "EBOOK SỔ TAY NHẬP MÔN SINH HỌC - Cô Nguyễn Vũ Trà My",
             "files": [
               {
                 "name": "EBOOK SỔ TAY NHẬP MÔN SINH HỌC, CÔ NGUYỄN VŨ TRÀ MY",
@@ -21954,7 +21954,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SỔ TAY ĐỀ TỰ LUYỆN NGỮ VĂN, CÔ SƯƠNG MAI",
+            "folderName": "EBOOK SỔ TAY ĐỀ TỰ LUYỆN NGỮ VĂN - Cô Sương Mai",
             "files": [
               {
                 "name": "EBOOK SỔ TAY ĐỀ TỰ LUYỆN NGỮ VĂN, CÔ SƯƠNG MAI",
@@ -21979,7 +21979,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "SỔ TAY ĐỀ TỰ LUYỆN NGỮ VĂN CÔ SƯƠNG MAI",
+            "folderName": "SỔ TAY ĐỀ TỰ LUYỆN NGỮ VĂN - Cô Sương Mai",
             "files": [
               {
                 "name": "SỔ TAY ĐỀ TỰ LUYỆN NGỮ VĂN CÔ SƯƠNG MAI",
@@ -22059,7 +22059,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK TRẠM 3 LIVE G TỔNG ÔN NÂNG CAO KIẾN THỨC MÔN LỊCH SỬ, CÔ NGUYỄN HƯƠNG SEN",
+            "folderName": "EBOOK TRẠM 3 LIVE G TỔNG ÔN NÂNG CAO KIẾN THỨC MÔN LỊCH SỬ - Cô Nguyễn Hương Sen",
             "files": [
               {
                 "name": "EBOOK TRẠM 3 LIVE G TỔNG ÔN NÂNG CAO KIẾN THỨC MÔN LỊCH SỬ, CÔ NGUYỄN HƯƠNG SEN",
@@ -22164,7 +22164,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Trả Lời Nhanh Từ Khóa Lịch Sử Trọng Tâm (Cô Nguyễn Hương Sen) CÓ ĐÁP ÁN",
+            "folderName": "Trả Lời Nhanh Từ Khóa Lịch Sử Trọng Tâm - Cô Nguyễn Hương Sen - Có đáp án",
             "files": [
               {
                 "name": "Bản sao của Trả Lời Nhanh Từ Khóa Lịch Sử Trọng Tâm (Cô Nguyễn Hương Sen).pdf",
@@ -22184,7 +22184,7 @@ const DEFAULT_TREE = [
         "subjectName": "Địa lý",
         "folders": [
           {
-            "folderName": "🗂️BỘ 25 ĐỀ ĐỊA LÍ TRỌNG TÂM 2025 - CÔ MAI ANH & TS NVT",
+            "folderName": "🗂️BỘ 25 ĐỀ ĐỊA LÍ TRỌNG TÂM 2025 - Cô Mai Anh & TS. NVT",
             "files": [
               {
                 "name": "Bộ 25 ĐỀ ĐỊA LÍ TRỌNG TÂM 2025.pdf",
@@ -22254,7 +22254,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK LÀM CHỦ KIẾN THỨC ĐỊA LÝ TRỌNG TÂM, CÔ HOÀNG THỊ MAI ANH",
+            "folderName": "EBOOK LÀM CHỦ KIẾN THỨC ĐỊA LÝ TRỌNG TÂM - Cô Hoàng Thị Mai Anh",
             "files": [
               {
                 "name": "EBOOK LÀM CHỦ KIẾN THỨC ĐỊA LÝ TRỌNG TÂM, CÔ HOÀNG THỊ MAI ANH",
@@ -22279,7 +22279,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SỔ TAY KIẾN THỨC TRỌNG TÂM MÔN ĐỊA LÝ, THẦY TRẦN VĂN TÀI",
+            "folderName": "EBOOK SỔ TAY KIẾN THỨC TRỌNG TÂM MÔN ĐỊA LÝ - Thầy Trần Văn Tài",
             "files": [
               {
                 "name": "EBOOK SỔ TAY KIẾN THỨC TRỌNG TÂM MÔN ĐỊA LÝ, THẦY TRẦN VĂN TÀI",
@@ -22289,7 +22289,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Kiến thức trọng tâm về Sông ngòi Địa Lí thầy Tài",
+            "folderName": "Kiến thức trọng tâm về Sông ngòi - Thầy Trần Văn Tài",
             "files": [
               {
                 "name": "Kiến thức trọng tâm về Sông ngòi Địa Lí thầy Tài",
@@ -22299,7 +22299,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "LÀM CHỦ KIẾN THỨC ĐỊA LÍ TRỌNG TÂM CÔ MAI ANH",
+            "folderName": "LÀM CHỦ KIẾN THỨC ĐỊA LÍ TRỌNG TÂM - Cô Hoàng Thị Mai Anh",
             "files": [
               {
                 "name": "LÀM CHỦ KIẾN THỨC ĐỊA LÍ TRỌNG TÂM CÔ MAI ANH",
@@ -22364,7 +22364,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN ĐỊA TẬP 2 CÔ PHƯƠNG DUNG",
+            "folderName": "TỔNG ÔN ĐỊA TẬP 2 - Cô Phương Dung",
             "files": [
               {
                 "name": "TỔNG ÔN ĐỊA TẬP 2 CÔ PHƯƠNG DUNG",
@@ -22379,7 +22379,7 @@ const DEFAULT_TREE = [
         "subjectName": "Tiếng Anh",
         "folders": [
           {
-            "folderName": "Các đề tổng ôn toàn diện Chương - Từ Trường - thầy Vũ Ngọc Anh",
+            "folderName": "Các đề tổng ôn toàn diện Chương - Từ Trường - Thầy Vũ Ngọc Anh",
             "files": [
               {
                 "name": "TO1EF8~1.PDF",
@@ -22409,7 +22409,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "Hệ thống kiến thức trọng tâm cô Mai Anh",
+            "folderName": "Hệ thống kiến thức trọng tâm - Cô Hoàng Thị Mai Anh",
             "files": [
               {
                 "name": "Hệ thống kiến thức trọng tâm cô Mai Anh",
@@ -22429,7 +22429,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "SÁCH TỔNG ÔN TỪ VỰNG CÔ TRANG ANH TẬP 1",
+            "folderName": "SÁCH TỔNG ÔN TỪ VỰNG - Cô Trang Anh - Tập 1",
             "files": [
               {
                 "name": "SÁCH TỔNG ÔN TỪ VỰNG CÔ TRANG ANH TẬP 1",
@@ -22469,7 +22469,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN NGỮ PHÁP TIẾNG ANH (Cô Trang Anh)",
+            "folderName": "TỔNG ÔN NGỮ PHÁP TIẾNG ANH - Cô Trang Anh",
             "files": [
               {
                 "name": "TỔNG ÔN NGỮ PHÁP TIẾNG ANH (Cô Trang Anh)",
@@ -22479,7 +22479,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "TỔNG ÔN TOÀN DIỆN 4 CHƯƠNG - thầy Vũ Ngọc Anh",
+            "folderName": "TỔNG ÔN TOÀN DIỆN 4 CHƯƠNG - Thầy Vũ Ngọc Anh",
             "files": [
               {
                 "name": "tai-lieu---buoi-40---tong-on-toan-dien-1747735707755.pdf",
@@ -22514,7 +22514,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "100 câu tổng ôn ngữ pháp - cô Phạm Liễu",
+            "folderName": "100 câu tổng ôn ngữ pháp - Cô Phạm Liễu",
             "files": [
               {
                 "name": "100 câu tổng ôn ngữ pháp - cô Phạm Liễu",
@@ -22534,7 +22534,7 @@ const DEFAULT_TREE = [
             ]
           },
           {
-            "folderName": "EBOOK SỔ TAY KIẾN THỨC TIẾNG VIỆT, CÔ SƯƠNG MAI",
+            "folderName": "EBOOK SỔ TAY KIẾN THỨC TIẾNG VIỆT - Cô Sương Mai",
             "files": [
               {
                 "name": "EBOOK SỔ TAY KIẾN THỨC TIẾNG VIỆT, CÔ SƯƠNG MAI",
