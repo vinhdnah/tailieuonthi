@@ -23023,54 +23023,75 @@ const ROADMAP_PHASES = [
 
 // Fetch file name from Google Drive public page via AllOrigins proxy
 async function fetchFileNameFromDrive(driveId) {
-  try {
-    const targetUrl = `https://drive.google.com/file/d/${driveId}/view`;
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-    
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 seconds timeout
-    
-    const response = await fetch(proxyUrl, { signal: controller.signal });
-    clearTimeout(timeoutId);
-    
-    if (!response.ok) throw new Error('Proxy response error');
-    const html = await response.text();
-    if (!html) throw new Error('Proxy returned empty contents');
-    
-    let title = '';
-    
-    // 1. og:title
-    const ogMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["'](.*?)["']/i) || 
-                    html.match(/<meta\s+content=["'](.*?)["']\s+property=["']og:title["']/i);
-    if (ogMatch && ogMatch[1]) {
-      title = ogMatch[1];
-    }
-    
-    // 2. <title> tag
-    if (!title) {
-      const titleMatch = html.match(/<title>(.*?)<\/title>/i);
-      if (titleMatch && titleMatch[1]) {
-        title = titleMatch[1];
+  const targetUrl = `https://drive.google.com/file/d/${driveId}/view`;
+  
+  const proxies = [
+    url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    url => `https://thingproxy.freeboard.io/fetch/${url}`
+  ];
+  
+  for (let i = 0; i < proxies.length; i++) {
+    try {
+      const proxyUrl = proxies[i](targetUrl);
+      console.log(`Đang thử đồng bộ bằng proxy ${i + 1}/${proxies.length}...`);
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000); // 6 seconds timeout per proxy
+      
+      const response = await fetch(proxyUrl, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+      
+      const html = await response.text();
+      if (!html) throw new Error('Empty HTML response');
+      
+      // Check if it's a Cloudflare error page or proxy error message
+      if (html.includes('522: Connection timed out') || 
+          html.includes('520: Web server') || 
+          html.includes('Server-side requests are not allowed') ||
+          html.includes('Rate limit exceeded')) {
+        throw new Error('Proxy error or timeout');
       }
-    }
-    
-    if (title) {
-      title = title.replace(/\s*-\s*Google\s*Drive/gi, '')
-                   .replace(/\s*-\s*Google\s*trình\s*xem.*/gi, '')
-                   .trim();
-                   
-      if (title && 
-          !title.includes('Google Drive - Virus scan warning') && 
-          !title.includes('Sign-in') && 
-          !title.includes('Đăng nhập') &&
-          !title.toLowerCase().includes('google drive')) {
-        const txt = document.createElement('textarea');
-        txt.innerHTML = title;
-        return txt.value.trim();
+      
+      let title = '';
+      
+      // 1. og:title
+      const ogMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["'](.*?)["']/i) || 
+                      html.match(/<meta\s+content=["'](.*?)["']\s+property=["']og:title["']/i);
+      if (ogMatch && ogMatch[1]) {
+        title = ogMatch[1];
       }
+      
+      // 2. <title> tag
+      if (!title) {
+        const titleMatch = html.match(/<title>(.*?)<\/title>/i);
+        if (titleMatch && titleMatch[1]) {
+          title = titleMatch[1];
+        }
+      }
+      
+      if (title) {
+        title = title.replace(/\s*-\s*Google\s*Drive/gi, '')
+                     .replace(/\s*-\s*Google\s*trình\s*xem.*/gi, '')
+                     .trim();
+                     
+        if (title && 
+            !title.includes('Google Drive - Virus scan warning') && 
+            !title.includes('Sign-in') && 
+            !title.includes('Đăng nhập') &&
+            !title.toLowerCase().includes('google drive')) {
+          const txt = document.createElement('textarea');
+          txt.innerHTML = title;
+          const cleanedTitle = txt.value.trim();
+          console.log(`Thành công lấy tên bằng proxy ${i + 1}: ${cleanedTitle}`);
+          return cleanedTitle;
+        }
+      }
+    } catch (err) {
+      console.warn(`Proxy ${i + 1} thất bại:`, err.message);
     }
-  } catch (err) {
-    console.error('Lỗi khi lấy tên file từ Drive:', err);
   }
   return null;
 }
