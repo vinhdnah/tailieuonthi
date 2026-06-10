@@ -236,23 +236,38 @@
             </div>
           </div>
 
-          <!-- Preview Pane -->
-          <div class="preview-pane">
-            <div class="preview-loading" id="preview-loader">
-              <div class="spinner"></div>
-              <p>Đang tải nội dung xem trước...</p>
+          <!-- Viewer Scrollable Body -->
+          <div class="viewer-body-scroll" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column;">
+            <!-- Preview Pane -->
+            <div class="preview-pane">
+              <div class="preview-loading" id="preview-loader">
+                <div class="spinner"></div>
+                <p>Đang tải nội dung xem trước...</p>
+              </div>
+              <div class="preview-error" id="preview-error" style="display:none;">
+                <div class="preview-error-icon"><i class="fa-solid fa-film"></i></div>
+                <p class="preview-error-title">Không thể xem trước trong trang này</p>
+                <p class="preview-error-desc">File này (thường là video hoặc tài liệu hạn chế) không hỗ trợ nhúng trực
+                  tiếp. Hãy mở trên Google Drive để xem.</p>
+                <a id="btn-open-drive-fallback" href="#" target="_blank" class="btn btn-primary">
+                  <i class="fa-solid fa-play"></i> Mở và xem trên Drive
+                </a>
+              </div>
+              <iframe id="preview-iframe" src="" frameborder="0"
+                allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
             </div>
-            <div class="preview-error" id="preview-error" style="display:none;">
-              <div class="preview-error-icon"><i class="fa-solid fa-film"></i></div>
-              <p class="preview-error-title">Không thể xem trước trong trang này</p>
-              <p class="preview-error-desc">File này (thường là video hoặc tài liệu hạn chế) không hỗ trợ nhúng trực
-                tiếp. Hãy mở trên Google Drive để xem.</p>
-              <a id="btn-open-drive-fallback" href="#" target="_blank" class="btn btn-primary">
-                <i class="fa-solid fa-play"></i> Mở và xem trên Drive
-              </a>
+
+            <!-- Google Ads - Multiplex Ad -->
+            <div class="ad-container multiplex-ad" style="padding: 20px; text-align: center; border-top: 1px solid var(--border-color); flex-shrink: 0; background-color: rgba(0, 0, 0, 0.02);">
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-format="autorelaxed"
+                   data-ad-client="ca-pub-1381692465436519"
+                   data-ad-slot="7659192262"></ins>
+              <script>
+                   (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
             </div>
-            <iframe id="preview-iframe" src="" frameborder="0"
-              allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
           </div>
         </section>
 

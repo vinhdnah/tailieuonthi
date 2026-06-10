@@ -895,10 +895,11 @@ body {
 
 /* Preview Pane */
 .preview-pane {
-  flex-grow: 1;
   position: relative;
   background-color: #171717; /* Dark background under pdf frame */
-  height: 100%;
+  height: 75vh;
+  min-height: 500px;
+  flex-shrink: 0;
 }
 
 .preview-pane iframe {
@@ -1547,7 +1548,7 @@ body {
   .preview-pane {
     flex: 1;
     overflow: hidden;
-    height: calc(100dvh - 52px);
+    height: calc(100dvh - 52px) !important;
   }
 
   .preview-pane iframe {
@@ -1748,7 +1749,7 @@ body {
   }
 
   .preview-pane {
-    height: calc(100dvh - 46px);
+    height: calc(100dvh - 46px) !important;
   }
 
   .sidebar-header {
