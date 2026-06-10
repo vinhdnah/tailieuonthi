@@ -23150,6 +23150,74 @@ async function autoSyncFileName(driveId) {
   }
 }
 
+// Priority automatic sync for generic files in selected folder
+async function syncFolderFilesImmediate(folder) {
+  if (!folder || !folder.files) return;
+  
+  const genericFiles = folder.files.filter(file => 
+    /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(file.name.trim())
+  );
+  
+  if (genericFiles.length === 0) return;
+  
+  for (const file of genericFiles) {
+    // Only fetch if still generic
+    const isStillGeneric = /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(file.name.trim());
+    if (!isStillGeneric) continue;
+    
+    const newName = await fetchFileNameFromDrive(file.driveId);
+    if (newName) {
+      const updated = updateFileName(file.driveId, newName);
+      if (updated) {
+        file.name = newName;
+      }
+    }
+    // Small delay between requests in folder sync
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+}
+
+// Background worker to sync all generic names in the database slowly
+async function startBackgroundSyncAll() {
+  const genericFiles = [];
+  fileTreeData.forEach(category => {
+    category.subjects.forEach(subject => {
+      subject.folders.forEach(folder => {
+        folder.files.forEach(file => {
+          const isGenericName = /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(file.name.trim());
+          if (isGenericName) {
+            genericFiles.push({ driveId: file.driveId, file });
+          }
+        });
+      });
+    });
+  });
+  
+  if (genericFiles.length === 0) return;
+  
+  console.log(`Bắt đầu đồng bộ ngầm ${genericFiles.length} file có tên chung chung...`);
+  
+  for (const item of genericFiles) {
+    // Check if name is still generic (might have been updated by folder select or manual sync)
+    const isStillGeneric = /^(t[ệe]p\s*\d+|t[àa]i\s*li[ệe]u(?:\s*pdf)?|t[ệe]p\s*tin)$/i.test(item.file.name.trim());
+    if (!isStillGeneric) continue;
+    
+    const newName = await fetchFileNameFromDrive(item.driveId);
+    if (newName) {
+      const updated = updateFileName(item.driveId, newName);
+      if (updated) {
+        item.file.name = newName;
+        // If the user is currently viewing this file, update the title
+        if (activeFile && activeFile.driveId === item.driveId) {
+          elActiveFileTitle.textContent = newName;
+        }
+      }
+    }
+    // Wait 3 seconds to be gentle
+    await new Promise(resolve => setTimeout(resolve, 3000));
+  }
+}
+
 // Google Drive URL ID Parser
 function extractGoogleDriveId(url) {
   if (!url) return null;
@@ -24157,6 +24225,9 @@ function selectFolder(folder, pushState = true) {
   if (pushState) {
     history.pushState({ panel: 'folder', folder: folder }, '');
   }
+
+  // Trigger priority automatic sync for generic files in this folder
+  syncFolderFilesImmediate(folder);
 }
 
 // Batch download trigger with sequential setTimeout spacing
@@ -25242,4 +25313,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load saved mode or default to selector
   const savedMode = localStorage.getItem('activeMode') || 'selector';
   switchAppMode(savedMode);
+
+  // Start background sync for all generic files
+  startBackgroundSyncAll();
 });
