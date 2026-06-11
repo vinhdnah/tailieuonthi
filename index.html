@@ -105,15 +105,21 @@
             <input type="text" id="search-input" placeholder="Tìm kiếm file..." autocomplete="off">
             <div id="search-suggestions" class="search-suggestions-dropdown"></div>
           </div>
-          <div class="action-buttons">
-            <button id="btn-open-import" class="btn btn-primary btn-sm btn-full">
-              <i class="fa-solid fa-plus"></i> Nhập dữ liệu
+          <div class="action-buttons" style="display: flex; gap: 6px; align-items: center;">
+            <!-- Bộ lọc loại file -->
+            <select id="search-filter-type" class="btn btn-secondary btn-sm" style="flex: 1; cursor: pointer; font-size: 12px;">
+              <option value="all">Tất cả loại</option>
+              <option value="pdf">PDF</option>
+              <option value="video">Video</option>
+              <option value="office">Office</option>
+            </select>
+            <!-- Nút yêu thích -->
+            <button id="btn-toggle-starred" class="btn btn-secondary btn-sm" title="Chỉ hiện file yêu thích" style="flex-shrink: 0;">
+              <i class="fa-regular fa-star"></i> Yêu thích
             </button>
-            <button id="theme-toggle-docs" class="btn btn-secondary btn-sm" title="Đổi giao diện Sáng/Tối">
+            <!-- Đổi giao diện -->
+            <button id="theme-toggle-docs" class="btn btn-secondary btn-sm" title="Đổi giao diện Sáng/Tối" style="flex-shrink: 0; width: 34px; height: 34px; padding: 0;">
               <i class="fa-solid fa-moon"></i>
-            </button>
-            <button id="btn-clear-all" class="btn btn-danger-outline btn-sm" title="Xóa toàn bộ dữ liệu">
-              <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
         </div>
@@ -137,11 +143,6 @@
 
           <div id="file-tree" class="file-tree">
             <!-- Dynamically populated via JS -->
-            <div class="tree-empty-state">
-              <i class="fa-regular fa-folder-open"></i>
-              <p>Chưa có file nào được nhập.</p>
-              <button id="btn-empty-import" class="btn btn-link">Nhập dữ liệu ngay</button>
-            </div>
           </div>
         </div>
 
@@ -174,8 +175,8 @@
             <div class="welcome-icon-glow">
               <i class="fa-brands fa-google-drive"></i>
             </div>
-            <h1>Trình Quản Lý & Tải File Google Drive</h1>
-            <p class="subtitle">Tải xuống trực tiếp và xem trước tài liệu Google Drive không cần chuyển trang</p>
+            <h1>Kho Tài Liệu Học Tập</h1>
+            <p class="subtitle">Xem trước và tải xuống tài liệu Google Drive không cần rời trang</p>
 
             <div class="feature-grid">
               <div class="feature-card">
@@ -186,18 +187,18 @@
               <div class="feature-card">
                 <div class="feat-icon"><i class="fa-solid fa-eye"></i></div>
                 <h3>Xem trước tức thì</h3>
-                <p>Hiển thị tài liệu PDF, hình ảnh, văn bản trực quan trực tiếp trên màn hình.</p>
+                <p>Hiển thị tài liệu PDF, video, Office trực quan ngay trong trang.</p>
               </div>
               <div class="feature-card">
-                <div class="feat-icon"><i class="fa-solid fa-code"></i></div>
-                <h3>Nhập mã HTML tiện lợi</h3>
-                <p>Sao chép cây thư mục HTML (như danh sách bài học của Thầy Tài) và dán để nhập nhanh.</p>
+                <div class="feat-icon"><i class="fa-solid fa-star"></i></div>
+                <h3>Đánh dấu yêu thích</h3>
+                <p>Lưu nhanh các tài liệu quan trọng và lọc để tìm lại dễ dàng.</p>
               </div>
             </div>
 
             <div class="quick-import-shortcut">
-              <button id="btn-welcome-import" class="btn btn-primary btn-lg">
-                <i class="fa-solid fa-file-import"></i> Bắt đầu nhập danh sách file
+              <button id="btn-browse-docs" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-book-open"></i> Duyệt tài liệu ngay
               </button>
             </div>
           </div>
@@ -221,8 +222,11 @@
             </div>
 
             <div class="viewer-actions">
+              <button id="btn-star-viewer" class="btn btn-secondary" title="Thêm vào yêu thích">
+                <i class="fa-regular fa-star"></i> <span class="btn-text">Yêu thích</span>
+              </button>
               <a id="btn-download-direct" href="#" target="_blank" class="btn btn-success" title="Tải xuống trực tiếp">
-                <i class="fa-solid fa-circle-down"></i> <span class="btn-text">Tải xuống trực tiếp</span>
+                <i class="fa-solid fa-circle-down"></i> <span class="btn-text">Tải xuống</span>
               </a>
               <a id="btn-open-drive" href="#" target="_blank" class="btn btn-secondary" title="Mở Drive">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> <span class="btn-text">Mở Drive</span>
@@ -231,7 +235,7 @@
                 <i class="fa-solid fa-rotate"></i> <span class="btn-text">Đồng bộ tên</span>
               </button>
               <button id="btn-copy-link" class="btn btn-accent" title="Sao chép link tải">
-                <i class="fa-regular fa-copy"></i> <span class="btn-text">Sao chép link tải</span>
+                <i class="fa-regular fa-copy"></i> <span class="btn-text">Sao chép</span>
               </button>
             </div>
           </div>
@@ -247,14 +251,30 @@
               <div class="preview-error" id="preview-error" style="display:none;">
                 <div class="preview-error-icon"><i class="fa-solid fa-film"></i></div>
                 <p class="preview-error-title">Không thể xem trước trong trang này</p>
-                <p class="preview-error-desc">File này (thường là video hoặc tài liệu hạn chế) không hỗ trợ nhúng trực
-                  tiếp. Hãy mở trên Google Drive để xem.</p>
+                <p class="preview-error-desc">File này không hỗ trợ nhúng trực tiếp. Hãy mở trên Google Drive để xem.</p>
                 <a id="btn-open-drive-fallback" href="#" target="_blank" class="btn btn-primary">
                   <i class="fa-solid fa-play"></i> Mở và xem trên Drive
                 </a>
               </div>
+              <!-- Unsupported format panel (Office, archives) -->
+              <div id="preview-unsupported" style="display:none; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 16px; padding: 40px; text-align: center;">
+                <i class="fa-solid fa-file-circle-exclamation" style="font-size: 48px; color: var(--color-accent); opacity: 0.8;"></i>
+                <p style="font-size: 15px; font-weight: 600; color: var(--text-main);">Định dạng này không hỗ trợ xem trước</p>
+                <p style="font-size: 13px; color: var(--text-muted); max-width: 320px;">Tài liệu Office, file nén và một số định dạng khác cần tải về để mở.</p>
+                <a id="btn-download-unsupported" href="#" target="_blank" class="btn btn-success">
+                  <i class="fa-solid fa-circle-down"></i> Tải xuống ngay
+                </a>
+              </div>
               <iframe id="preview-iframe" src="" frameborder="0"
                 allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- Document Notes -->
+            <div style="padding: 16px 20px; border-top: 1px solid var(--border-color); flex-shrink: 0; background: var(--bg-card);">
+              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fa-regular fa-note-sticky"></i> Ghi chú cá nhân
+              </label>
+              <textarea id="document-notes-textarea" placeholder="Ghi chú của bạn về tài liệu này..." style="width: 100%; min-height: 80px; padding: 10px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-main); font-family: var(--font-body); font-size: 13px; resize: vertical; outline: none; box-sizing: border-box;"></textarea>
             </div>
 
             <!-- Google Ads - Multiplex Ad -->
@@ -361,6 +381,10 @@
 
           <div class="tree-header" style="margin-top: 24px;">CÁ NHÂN HÓA</div>
           <div class="file-tree">
+            <div class="folder-label" data-roadmap-tab="dashboard">
+              <i class="folder-icon fa-solid fa-chart-pie" style="color: var(--color-primary)"></i>
+              <span class="ft-label-text">Báo cáo & Thống kê</span>
+            </div>
             <div class="folder-label" data-roadmap-tab="todos">
               <i class="folder-icon fa-solid fa-list-check" style="color: var(--color-success)"></i>
               <span class="ft-label-text">Việc cần làm (Todo)</span>
@@ -399,8 +423,15 @@
               <span class="meta-item"><i class="fa-solid fa-compass"></i> Hướng dẫn & Lộ trình chi tiết</span>
             </div>
           </div>
-          <div class="viewer-actions" style="margin-left: auto; display: flex; gap: 8px;">
-            <button id="theme-toggle-roadmap" class="btn-close-panel" title="Đổi giao diện Sáng/Tối">
+          <div class="viewer-actions" style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
+            <!-- Mobile: back to sidebar -->
+            <button id="btn-roadmap-back-mobile" class="btn-close-panel" title="Quay lại" style="display: none; height: 34px; width: 34px;">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <button id="btn-change-combination" class="btn btn-secondary btn-sm" title="Thay đổi khối thi/môn học ôn tập" style="border-radius: 20px; padding: 0 12px; height: 34px;">
+              <i class="fa-solid fa-gears"></i> <span class="btn-text">Đổi khối ôn thi</span>
+            </button>
+            <button id="theme-toggle-roadmap" class="btn-close-panel" title="Đổi giao diện Sáng/Tối" style="height: 34px; width: 34px;">
               <i class="fa-solid fa-moon"></i>
             </button>
           </div>
@@ -456,6 +487,110 @@
 
               <div id="todo-list" style="display: flex; flex-direction: column; gap: 10px;">
                 <!-- Tasks will be rendered here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Dashboard Stats & Charts -->
+          <div id="roadmap-tab-dashboard" class="roadmap-tab-content">
+            <!-- Stats Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+              <!-- Card 1 -->
+              <div class="stats-card" style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); display: flex; align-items: center; gap: 16px;">
+                <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: rgba(99, 102, 241, 0.1); color: var(--color-primary); display: grid; place-items: center; font-size: 20px;">
+                  <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <div>
+                  <div style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Tài liệu đã có</div>
+                  <div style="font-size: 22px; font-weight: 700; color: var(--text-main); margin-top: 4px;" id="db-stat-total-files">0</div>
+                </div>
+              </div>
+              <!-- Card 2 -->
+              <div class="stats-card" style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); display: flex; align-items: center; gap: 16px;">
+                <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: rgba(16, 185, 129, 0.1); color: var(--color-success); display: grid; place-items: center; font-size: 20px;">
+                  <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                  <div style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Tiến độ lộ trình</div>
+                  <div style="font-size: 22px; font-weight: 700; color: var(--color-success); margin-top: 4px;" id="db-stat-roadmap-percent">0%</div>
+                </div>
+              </div>
+              <!-- Card 3 -->
+              <div class="stats-card" style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md); display: flex; align-items: center; gap: 16px;">
+                <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: rgba(245, 158, 11, 0.1); color: var(--color-accent); display: grid; place-items: center; font-size: 20px;">
+                  <i class="fa-solid fa-list-check"></i>
+                </div>
+                <div>
+                  <div style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Mục tiêu cá nhân</div>
+                  <div style="font-size: 22px; font-weight: 700; color: var(--color-accent); margin-top: 4px;" id="db-stat-todo-done">0/0</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+              <!-- Chart 1 -->
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md);">
+                <h3 style="margin-bottom: 20px; font-family: var(--font-title); font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-chart-simple" style="color: var(--color-primary);"></i> Phân phối tài liệu theo môn học
+                </h3>
+                <div id="db-chart-subjects" style="display: flex; flex-direction: column; gap: 16px;">
+                  <!-- Bars generated dynamically -->
+                </div>
+              </div>
+              <!-- Chart 2 -->
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md);">
+                <h3 style="margin-bottom: 20px; font-family: var(--font-title); font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-chart-line" style="color: var(--color-success);"></i> Tiến độ ôn tập từng môn học
+                </h3>
+                <div id="db-chart-progress" style="display: flex; flex-direction: column; gap: 16px;">
+                  <!-- Bars generated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 5: Onboarding Combination Selector -->
+          <div id="roadmap-tab-setup" class="roadmap-tab-content">
+            <div style="max-width: 650px; margin: 0 auto; padding: 20px 0;">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <div style="font-size: 40px; color: var(--color-primary); margin-bottom: 16px;">
+                  <i class="fa-solid fa-route"></i>
+                </div>
+                <h2 style="font-family: var(--font-title); font-size: 24px; margin-bottom: 8px; color: var(--text-main);">Cá Nhân Hóa Lộ Trình Học Tập</h2>
+                <p style="color: var(--text-muted); font-size: 14px; max-width: 460px; margin: 0 auto; line-height: 1.5;">
+                  Chọn khối thi hoặc các môn học bạn muốn ôn thi để tối ưu hóa lộ trình học tập, bảng checklist kiến thức và theo dõi báo cáo cá nhân.
+                </p>
+              </div>
+
+              <!-- Quick Presets -->
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md); margin-bottom: 24px;">
+                <h3 style="font-family: var(--font-title); font-size: 15px; margin-bottom: 16px; color: var(--text-main);">Chọn nhanh theo khối thi phổ biến:</h3>
+                <div id="setup-presets" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                  <button type="button" class="btn btn-secondary btn-sm preset-btn" data-preset="A00">Khối A00 (Toán, Lý, Hóa)</button>
+                  <button type="button" class="btn btn-secondary btn-sm preset-btn" data-preset="A01">Khối A01 (Toán, Lý, Anh)</button>
+                  <button type="button" class="btn btn-secondary btn-sm preset-btn" data-preset="B00">Khối B00 (Toán, Hóa, Sinh)</button>
+                  <button type="button" class="btn btn-secondary btn-sm preset-btn" data-preset="C00">Khối C00 (Văn, Sử, Địa)</button>
+                  <button type="button" class="btn btn-secondary btn-sm preset-btn" data-preset="D01">Khối D01 (Toán, Văn, Anh)</button>
+                  <button type="button" class="btn btn-secondary btn-sm preset-btn" data-preset="HSA">ĐGNL HSA (ĐHQG HN)</button>
+                  <button type="button" class="btn btn-secondary btn-sm preset-btn" data-preset="TSA">ĐGTD TSA (ĐHBK HN)</button>
+                  <button type="button" class="btn btn-secondary btn-sm preset-btn" data-preset="TPHCM">ĐGNL TP.HCM</button>
+                </div>
+              </div>
+
+              <!-- Individual Subject Checkboxes -->
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md); margin-bottom: 30px;">
+                <h3 style="font-family: var(--font-title); font-size: 15px; margin-bottom: 16px; color: var(--text-main);">Hoặc tự chọn môn học cụ thể:</h3>
+                <div id="setup-subject-checks" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
+                  <!-- Checkboxes generated dynamically -->
+                </div>
+              </div>
+
+              <!-- Action Button -->
+              <div style="text-align: center;">
+                <button type="button" id="btn-save-setup" class="btn btn-primary" style="padding: 12px 36px; font-size: 15px; font-weight: 600; border-radius: var(--radius-md); min-width: 200px; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);">
+                  Lưu & Xem Lộ Trình <i class="fa-solid fa-chevron-right" style="margin-left: 6px; font-size: 12px;"></i>
+                </button>
               </div>
             </div>
           </div>

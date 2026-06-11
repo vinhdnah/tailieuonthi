@@ -1676,6 +1676,133 @@ body {
   .toast.show {
     transform: translateY(0) !important;
   }
+
+  /* ===== ROADMAP MOBILE ===== */
+
+  /* Roadmap sidebar full-screen by default on mobile */
+  #roadmap-app .sidebar {
+    width: 100% !important;
+    height: 100dvh !important;
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  /* Roadmap main content hidden by default on mobile */
+  #roadmap-app .main-content {
+    display: none !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    flex-direction: column !important;
+    overflow: hidden;
+  }
+
+  /* Show roadmap main when a tab is active, hide sidebar */
+  #roadmap-app.tab-open .sidebar {
+    display: none !important;
+  }
+
+  #roadmap-app.tab-open .main-content {
+    display: flex !important;
+  }
+
+  /* Roadmap header on mobile - compact, no overflow */
+  #roadmap-app .viewer-header {
+    padding: 10px 14px !important;
+    min-height: 52px;
+    flex-wrap: nowrap;
+    gap: 8px !important;
+  }
+
+  #roadmap-app .file-info {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  #roadmap-main-title {
+    font-size: 16px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Keep roadmap header actions visible - don't use circle buttons here */
+  #roadmap-app .viewer-actions {
+    flex-shrink: 0;
+    gap: 6px !important;
+  }
+
+  /* Override: btn-change-combination stays as pill, not circle */
+  #btn-change-combination {
+    border-radius: var(--radius-md) !important;
+    width: auto !important;
+    height: 34px !important;
+    padding: 0 10px !important;
+    border-radius: 20px !important;
+  }
+
+  #btn-change-combination .btn-text {
+    display: none !important; /* show icon only on small screens */
+  }
+
+  /* Roadmap body scrollable on mobile */
+  .roadmap-body-container {
+    flex: 1;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px !important;
+  }
+
+  /* Back button in roadmap header to return to sidebar */
+  #btn-roadmap-back-mobile {
+    display: flex !important;
+  }
+
+  /* Setup screen: single column grid on mobile */
+  #setup-subject-checks {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  #setup-presets {
+    gap: 8px !important;
+  }
+
+  #setup-presets .preset-btn {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
+
+  /* Dashboard stats grid: 1 column on mobile */
+  #roadmap-tab-dashboard > div:first-child {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Dashboard charts: 1 column on mobile */
+  #roadmap-tab-dashboard > div:last-child {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Roadmap phases max-width override */
+  .roadmap-phases-container,
+  .subject-chapters-list {
+    max-width: 100% !important;
+  }
+
+  /* Phase cards on mobile */
+  .phase-card {
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+
+  .phase-num {
+    font-size: 28px !important;
+  }
+
+  .phase-content h3 {
+    font-size: 15px !important;
+  }
 }
 
 /* Narrow phones */
@@ -2538,5 +2665,118 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 
 body.light-theme .search-box input {
   border: 1px solid rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Personalized Combination Setup & Dashboard styles */
+.roadmap-tab-content {
+  display: none;
+}
+.roadmap-tab-content.active {
+  display: block;
+}
+
+/* Setup subjects styling */
+.setup-subject-check-label {
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.setup-subject-check-label:hover {
+  border-color: var(--color-primary) !important;
+  background: rgba(99, 102, 241, 0.04);
+}
+
+body.light-theme .setup-subject-check-label:hover {
+  background: rgba(37, 99, 235, 0.02) !important;
+  border-color: rgba(37, 99, 235, 0.3) !important;
+}
+
+/* Dashboard styles */
+.stats-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+body.light-theme .stats-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.05) !important;
+}
+body.light-theme .stats-card:hover {
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.03) !important;
+}
+
+/* Star/Yêu thích Button active/inactive styles */
+#btn-toggle-starred.active {
+  background-color: rgba(251, 191, 36, 0.1) !important;
+  border-color: rgba(251, 191, 36, 0.4) !important;
+  color: #fbbf24 !important;
+}
+
+body.light-theme #btn-toggle-starred.active {
+  background-color: rgba(251, 191, 36, 0.08) !important;
+  border-color: rgba(251, 191, 36, 0.3) !important;
+  color: #d97706 !important;
+}
+
+#btn-star-viewer.active {
+  background-color: rgba(251, 191, 36, 0.1) !important;
+  border-color: rgba(251, 191, 36, 0.4) !important;
+  color: #fbbf24 !important;
+}
+
+body.light-theme #btn-star-viewer.active {
+  background-color: rgba(251, 191, 36, 0.08) !important;
+  border-color: rgba(251, 191, 36, 0.3) !important;
+  color: #d97706 !important;
+}
+
+/* Custom styling for file type filter dropdown */
+#search-filter-type {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 24px !important;
+  cursor: pointer;
+}
+
+body.light-theme #search-filter-type {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+}
+
+#search-filter-type option {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+}
+
+body.light-theme #search-filter-type option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+/* Document Notes textarea focus and theme styles */
+#document-notes-textarea {
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+#document-notes-textarea:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
+}
+
+body.light-theme #document-notes-textarea {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: #0f172a !important;
+}
+
+body.light-theme #document-notes-textarea:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
 }
 

@@ -3,3 +3,5 @@ dist/
 .DS_Store
 *.log
 graphify-out/
+*.rar
+*.zip

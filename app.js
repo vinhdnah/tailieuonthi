@@ -22669,6 +22669,9 @@ let activeFile = null;
 let activeFolder = null;
 let activeViewMode = 'category'; // 'category' (Lớp & Môn) or 'teacher' (Giáo viên)
 let currentSearchQuery = '';
+let starredFiles = new Set();
+let showStarredOnly = false;
+let activeSearchType = 'all'; // 'all' | 'pdf' | 'video' | 'office'
 
 // DOM Elements
 const elFileTree = document.getElementById('file-tree');
@@ -22677,6 +22680,15 @@ const elSearchSuggestions = document.getElementById('search-suggestions');
 const elFileCount = document.getElementById('file-count');
 const elEmptyPanel = document.getElementById('empty-panel');
 const elViewerPanel = document.getElementById('viewer-panel');
+
+// New UI Elements
+const elSearchFilterType = document.getElementById('search-filter-type');
+const elBtnToggleStarred = document.getElementById('btn-toggle-starred');
+const elBtnStarViewer = document.getElementById('btn-star-viewer');
+const elDocumentNotesTextarea = document.getElementById('document-notes-textarea');
+const elPreviewUnsupported = document.getElementById('preview-unsupported');
+const elBtnDownloadUnsupported = document.getElementById('btn-download-unsupported');
+const elRoadmapTabDashboard = document.getElementById('roadmap-tab-dashboard');
 
 // Screen elements
 const elWelcomeSelector = document.getElementById('welcome-selector');
@@ -22723,25 +22735,17 @@ const elProgressText = document.getElementById('progress-text');
 const elProgressPercent = document.getElementById('progress-percent');
 const elProgressBarFill = document.getElementById('progress-bar-fill');
 
-// Modals & Forms
-const elImportModal = document.getElementById('import-modal');
-const elBtnOpenImport = document.getElementById('btn-open-import');
-const elBtnWelcomeImport = document.getElementById('btn-welcome-import');
-const elBtnEmptyImport = document.getElementById('btn-empty-import');
-const elBtnCloseModal = document.getElementById('btn-close-modal');
-const elBtnCancelImport = document.getElementById('btn-cancel-import');
-const elBtnProcessImport = document.getElementById('btn-process-import');
-const elBtnClearAll = document.getElementById('btn-clear-all');
-
-// Tabs
-const tabButtons = document.querySelectorAll('.tab-btn');
-const tabContents = document.querySelectorAll('.tab-content');
-
-// Inputs
-const elHtmlImportInput = document.getElementById('html-import-input');
-const elSingleLinkUrl = document.getElementById('single-link-url');
-const elSingleLinkName = document.getElementById('single-link-name');
-const elSingleLinkFolder = document.getElementById('single-link-folder');
+// Backup & Restore elements
+const elBackupModal = document.getElementById('backup-modal');
+const elBtnBackupDocs = document.getElementById('btn-backup-docs');
+const elBtnBackupRoadmap = document.getElementById('btn-backup-roadmap');
+const elBtnCloseBackupModal = document.getElementById('btn-close-backup-modal');
+const elBtnCancelBackup = document.getElementById('btn-cancel-backup');
+const elBtnExportData = document.getElementById('btn-export-data');
+const elBtnTriggerImportFile = document.getElementById('btn-trigger-import-file');
+const elBackupFileInput = document.getElementById('backup-file-input');
+const elBackupFileName = document.getElementById('backup-file-name');
+const elBtnImportBackup = document.getElementById('btn-import-backup');
 
 // Toast notification
 const elToast = document.getElementById('toast');
@@ -22757,6 +22761,7 @@ const elRoadmapMainTitle = document.getElementById('roadmap-main-title');
 const elRoadmapTabPhases = document.getElementById('roadmap-tab-phases');
 const elRoadmapTabSubject = document.getElementById('roadmap-tab-subject');
 const elRoadmapTabTodos = document.getElementById('roadmap-tab-todos');
+const elRoadmapTabSetup = document.getElementById('roadmap-tab-setup');
 const elSubjectProgressPercent = document.getElementById('subject-progress-percent');
 const elSubjectProgressBarFill = document.getElementById('subject-progress-bar-fill');
 const elSubjectChaptersList = document.getElementById('subject-chapters-list');
@@ -22970,6 +22975,29 @@ const ROADMAP_SUBJECTS = {
     }
   ]
 };
+
+const COMBINATIONS = {
+  "A00": ["Toán học", "Vật lý", "Hóa học"],
+  "A01": ["Toán học", "Vật lý", "Tiếng Anh"],
+  "B00": ["Toán học", "Hóa học", "Sinh học"],
+  "C00": ["Ngữ văn", "Lịch sử", "Địa lý"],
+  "D01": ["Toán học", "Ngữ văn", "Tiếng Anh"],
+  "HSA": ["HSA (ĐHQG Hà Nội)"],
+  "TSA": ["TSA (ĐH Bách Khoa)"],
+  "TPHCM": ["ĐGNL (ĐHQG TP.HCM)"]
+};
+
+function getActiveRoadmapSubjects() {
+  try {
+    const saved = localStorage.getItem('selected_roadmap_subjects');
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error("Lỗi khi đọc danh sách môn thi ôn tập", e);
+  }
+  return [];
+}
 
 const ROADMAP_PHASES = [
   {
@@ -23337,16 +23365,6 @@ function classifyCategory(folderName, files = []) {
   if (l10Keywords.some(kw => text.includes(kw)) || /\b10\b/.test(text)) {
     return "Lớp 10";
   }
-  
-  // 6. Check Lớp 9
-  const l9Keywords = [
-    "lớp 9", "lop 9", "tuyển sinh 10", "tuyen sinh 10", 
-    "vào 10", "vao 10", "lên 10", "len 10"
-  ];
-  if (l9Keywords.some(kw => text.includes(kw)) || /\b9\b/.test(text)) {
-    return "Lớp 9";
-  }
-  
   return "Tài liệu chung";
 }
 
@@ -23462,11 +23480,17 @@ function detectTeacher(folderName, fileName) {
   if (text.includes("sương mai") || text.includes("cô mai")) {
     return "Cô Sương Mai";
   }
-  if (text.includes("cô sen") || text.includes("vũ sen") || text.includes("vu sen")) {
-    return "Cô Sen";
+  if (text.includes("cô sen") || text.includes("vũ sen") || text.includes("vu sen") || text.includes("cô hương") || text.includes("co huong") || text.includes("hương sen") || text.includes("nguyễn hương sen") || text.includes("huong x ap")) {
+    return "Cô Nguyễn Hương Sen";
   }
-  if (text.includes("thầy nhật") || text.includes("thay nhat")) {
-    return "Thầy Nhật";
+  if (text.includes("trang anh")) {
+    return "Cô Trang Anh";
+  }
+  if (text.includes("tùng atschool") || text.includes("tung atschool")) {
+    return "Thầy Tùng Atschool";
+  }
+  if (text.includes("thầy nhật") || text.includes("thay nhat") || text.includes("phạm minh nhật") || text.includes("pham minh nhat")) {
+    return "Thầy Phạm Minh Nhật";
   }
   if (text.includes("tào việt đức") || text.includes("tao viet duc")) {
     return "Tào Việt Đức";
@@ -23530,12 +23554,27 @@ function detectTeacher(folderName, fileName) {
           return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
         }).join(' ');
         
+        let fullName = `${type} ${formattedName}`;
+        const lowerFull = fullName.toLowerCase();
+        
         // Map common variations to a standardized name
-        if (formattedName.toLowerCase() === "sen" || formattedName.toLowerCase() === "vũ sen") {
-          formattedName = "Sen";
+        if (lowerFull.includes("sen") || lowerFull.includes("hương sen") || lowerFull.includes("cô hương") || lowerFull.includes("hương x ấp")) {
+          return "Cô Nguyễn Hương Sen";
+        }
+        if (lowerFull.includes("trang anh")) {
+          return "Cô Trang Anh";
+        }
+        if (lowerFull.includes("tùng atschool") || (lowerFull.includes("tùng") && lowerFull.includes("school"))) {
+          return "Thầy Tùng Atschool";
+        }
+        if (lowerFull.includes("vũ ngọc anh") || lowerFull.includes("vna")) {
+          return "Thầy Vũ Ngọc Anh";
+        }
+        if (lowerFull.includes("nhật") || lowerFull.includes("minh nhật")) {
+          return "Thầy Phạm Minh Nhật";
         }
         
-        return `${type} ${formattedName}`;
+        return fullName;
       }
     }
   }
@@ -23617,9 +23656,12 @@ function getTeacherTreeData() {
     "Anh Giáo Kid",
     "Thầy Tài",
     "Cô Phạm Liễu",
-    "Thầy Nhật",
+    "Thầy Phạm Minh Nhật",
     "Cô Sương Mai",
-    "Cô Sen",
+    "Cô Nguyễn Hương Sen",
+    "Cô Trang Anh",
+    "Thầy Tùng Atschool",
+    "Thầy Vũ Ngọc Anh",
     "Tào Việt Đức",
     "HSA EDU",
     "VNES",
@@ -23794,7 +23836,6 @@ function sortTreeData() {
     "Lớp 12",
     "Lớp 11",
     "Lớp 10",
-    "Lớp 9",
     "Tài liệu chung"
   ];
   
@@ -23917,6 +23958,73 @@ function updateFileCount() {
   elFileCount.textContent = count;
 }
 
+function getFileType(fileName) {
+  const ext = fileName.toLowerCase().split('.').pop();
+  if (ext === 'pdf') return 'pdf';
+  if (['mp4', 'mkv', 'avi', 'mov', 'webm', 'flv'].includes(ext)) return 'video';
+  if (['docx', 'xlsx', 'pptx', 'doc', 'xls', 'ppt'].includes(ext)) return 'office';
+  return 'other';
+}
+
+function getFileIconClass(fileName) {
+  const ext = fileName.toLowerCase().split('.').pop();
+  if (ext === 'pdf') return 'fa-file-pdf';
+  if (['mp4', 'mkv', 'avi', 'mov', 'webm', 'flv'].includes(ext)) return 'fa-file-video';
+  if (['docx', 'doc'].includes(ext)) return 'fa-file-word';
+  if (['xlsx', 'xls'].includes(ext)) return 'fa-file-excel';
+  if (['pptx', 'ppt'].includes(ext)) return 'fa-file-powerpoint';
+  if (['zip', 'rar', '7z'].includes(ext)) return 'fa-file-zipper';
+  return 'fa-file';
+}
+
+function getFileIconColorClass(fileName) {
+  const ext = fileName.toLowerCase().split('.').pop();
+  if (ext === 'pdf') return 'pdf';
+  if (['mp4', 'mkv', 'avi', 'mov', 'webm', 'flv'].includes(ext)) return 'video';
+  if (['docx', 'doc'].includes(ext)) return 'word';
+  if (['xlsx', 'xls'].includes(ext)) return 'excel';
+  if (['pptx', 'ppt'].includes(ext)) return 'powerpoint';
+  if (['zip', 'rar', '7z'].includes(ext)) return 'archive';
+  return 'other';
+}
+
+function toggleStarredFile(driveId) {
+  if (starredFiles.has(driveId)) {
+    starredFiles.delete(driveId);
+    showToast("Đã bỏ yêu thích");
+  } else {
+    starredFiles.add(driveId);
+    showToast("Đã thêm vào yêu thích", "success");
+  }
+  localStorage.setItem('gdrive_starred_files', JSON.stringify(Array.from(starredFiles)));
+  
+  // Re-render
+  renderTree(currentSearchQuery);
+  if (activeFolder) {
+    selectFolder(activeFolder, false);
+  }
+  updateViewerStarButton();
+}
+
+function updateViewerStarButton() {
+  if (!elBtnStarViewer || !activeFile) return;
+  const isStarred = starredFiles.has(activeFile.driveId);
+  const icon = elBtnStarViewer.querySelector('i');
+  const text = elBtnStarViewer.querySelector('.btn-text');
+  
+  if (isStarred) {
+    icon.className = 'fa-solid fa-star';
+    icon.style.color = '#fbbf24';
+    if (text) text.textContent = 'Đã thích';
+    elBtnStarViewer.classList.add('active');
+  } else {
+    icon.className = 'fa-regular fa-star';
+    icon.style.color = '';
+    if (text) text.textContent = 'Yêu thích';
+    elBtnStarViewer.classList.remove('active');
+  }
+}
+
 function renderTree(searchQuery = '') {
   elFileTree.innerHTML = '';
   const query = searchQuery.trim().toLowerCase();
@@ -23930,7 +24038,6 @@ function renderTree(searchQuery = '') {
     "Lớp 12": "fa-school",
     "Lớp 11": "fa-book-open-reader",
     "Lớp 10": "fa-book-open",
-    "Lớp 9": "fa-pencil",
     "Tài liệu chung": "fa-folder-closed"
   };
 
@@ -23949,17 +24056,35 @@ function renderTree(searchQuery = '') {
       const matchingFolders = [];
       
       subject.folders.forEach(folder => {
-        const filteredFiles = (activeViewMode === 'teacher' && query) ? folder.files : folder.files.filter(file => 
-          file.name.toLowerCase().includes(query) || 
-          folder.folderName.toLowerCase().includes(query) ||
-          subject.subjectName.toLowerCase().includes(query) ||
-          itemTitle.toLowerCase().includes(query)
-        );
+        const filteredFiles = folder.files.filter(file => {
+          // Check query matching
+          const matchesQuery = !query || 
+            file.name.toLowerCase().includes(query) || 
+            folder.folderName.toLowerCase().includes(query) ||
+            subject.subjectName.toLowerCase().includes(query) ||
+            itemTitle.toLowerCase().includes(query);
+            
+          if (!matchesQuery) return false;
+          
+          // Check type filter
+          if (activeSearchType !== 'all') {
+            const fType = getFileType(file.name);
+            if (activeSearchType === 'pdf' && fType !== 'pdf') return false;
+            if (activeSearchType === 'video' && fType !== 'video') return false;
+            if (activeSearchType === 'office' && fType !== 'office') return false;
+          }
+          
+          // Check starred filter
+          if (showStarredOnly && !starredFiles.has(file.driveId)) return false;
+          
+          return true;
+        });
         
         if (filteredFiles.length > 0) {
           matchingFolders.push({
             folderName: folder.folderName,
-            files: filteredFiles
+            files: filteredFiles,
+            originalFolder: folder
           });
         }
       });
@@ -23975,7 +24100,7 @@ function renderTree(searchQuery = '') {
     if (matchingSubjects.length === 0) return;
     
     const categoryNode = document.createElement('div');
-    categoryNode.className = query ? 'category-node open' : 'category-node';
+    categoryNode.className = (query || showStarredOnly || activeSearchType !== 'all') ? 'category-node open' : 'category-node';
     
     const categoryLabel = document.createElement('div');
     categoryLabel.className = 'category-label';
@@ -24001,7 +24126,7 @@ function renderTree(searchQuery = '') {
     
     matchingSubjects.forEach(subject => {
       const subjectNode = document.createElement('div');
-      subjectNode.className = query ? 'subject-node open' : 'subject-node';
+      subjectNode.className = (query || showStarredOnly || activeSearchType !== 'all') ? 'subject-node open' : 'subject-node';
       
       const subjectLabel = document.createElement('div');
       subjectLabel.className = 'subject-label';
@@ -24025,27 +24150,36 @@ function renderTree(searchQuery = '') {
       const subjectChildren = document.createElement('div');
       subjectChildren.className = 'subject-children';
       
-      subject.folders.forEach(folder => {
-        totalFilesRendered += folder.files.length;
+      subject.folders.forEach(folderData => {
+        const folder = folderData.originalFolder;
+        totalFilesRendered += folderData.files.length;
+        
         const folderNode = document.createElement('div');
         folderNode.className = 'folder-node';
+        const hasActiveFile = folderData.files.some(f => activeFile && activeFile.driveId === f.driveId);
+        if (query || showStarredOnly || activeSearchType !== 'all' || hasActiveFile) {
+          folderNode.classList.add('open');
+        }
         
         const folderLabel = document.createElement('div');
         folderLabel.className = 'folder-label';
+        if (activeFolder && activeFolder.folderName === folderData.folderName) {
+          folderLabel.classList.add('active');
+        }
         
         const folderIcon = document.createElement('i');
         folderIcon.className = 'folder-icon fa-solid fa-folder';
         
         const folderText = document.createElement('span');
         folderText.className = 'ft-label-text';
-        folderText.textContent = folder.folderName;
+        folderText.textContent = folderData.folderName;
         
         const folderDlBtn = document.createElement('i');
         folderDlBtn.className = 'folder-download-btn-sidebar fa-solid fa-cloud-arrow-down';
         folderDlBtn.title = "Tải toàn bộ thư mục";
         folderDlBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          downloadFolderFiles(folder.files);
+          downloadFolderFiles(folderData.files);
         });
         
         folderLabel.appendChild(folderIcon);
@@ -24053,12 +24187,67 @@ function renderTree(searchQuery = '') {
         folderLabel.appendChild(folderDlBtn);
         folderNode.appendChild(folderLabel);
         
+        // Render file children in tree
+        const folderChildren = document.createElement('div');
+        folderChildren.className = 'folder-children';
+        
+        folderData.files.forEach(file => {
+          const fileItem = document.createElement('div');
+          fileItem.className = 'file-item';
+          if (activeFile && activeFile.driveId === file.driveId) {
+            fileItem.classList.add('active');
+          }
+          
+          const fileIcon = document.createElement('i');
+          const fileIconClass = getFileIconClass(file.name);
+          const colorClass = getFileIconColorClass(file.name);
+          fileIcon.className = `file-icon fa-solid ${fileIconClass} ${colorClass}`;
+          
+          const fileText = document.createElement('span');
+          fileText.className = 'file-name';
+          fileText.textContent = file.name;
+          fileText.style.flex = '1';
+          fileText.style.overflow = 'hidden';
+          fileText.style.textOverflow = 'ellipsis';
+          
+          const fileStar = document.createElement('i');
+          const isStarred = starredFiles.has(file.driveId);
+          fileStar.className = isStarred ? 'fa-solid fa-star star-icon starred' : 'fa-regular fa-star star-icon';
+          fileStar.style.color = isStarred ? '#fbbf24' : '';
+          fileStar.style.cursor = 'pointer';
+          fileStar.style.padding = '4px';
+          fileStar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleStarredFile(file.driveId);
+          });
+          
+          fileItem.appendChild(fileIcon);
+          fileItem.appendChild(fileText);
+          fileItem.appendChild(fileStar);
+          folderChildren.appendChild(fileItem);
+          
+          fileItem.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+            fileItem.classList.add('active');
+            selectFile(file, folderData.folderName);
+          });
+        });
+        
+        folderNode.appendChild(folderChildren);
         subjectChildren.appendChild(folderNode);
         
         folderLabel.addEventListener('click', (e) => {
           if (e.target !== folderDlBtn) {
             document.querySelectorAll('.folder-label').forEach(el => el.classList.remove('active'));
             folderLabel.classList.add('active');
+            
+            const isOpen = folderNode.classList.contains('open');
+            if (isOpen) {
+              folderNode.classList.remove('open');
+            } else {
+              folderNode.classList.add('open');
+            }
             selectFolder(folder);
           }
         });
@@ -24115,11 +24304,10 @@ function renderTree(searchQuery = '') {
   });
   
   if (totalFilesRendered === 0) {
-    elFileTree.innerHTML = `<div class="tree-empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>${query ? 'Không tìm thấy tệp tin phù hợp.' : 'Danh sách trống. Vui lòng thêm dữ liệu!'}</p></div>`;
+    elFileTree.innerHTML = `<div class="tree-empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>${query ? 'Không tìm thấy tệp tin phù hợp.' : 'Không có tài liệu nào được hiển thị.'}</p></div>`;
   }
 }
 
-// Select file and open preview panel
 function selectFile(file, folderName, pushState = true) {
   activeFile = file;
   activeFolder = null;
@@ -24139,27 +24327,54 @@ function selectFile(file, folderName, pushState = true) {
   elBtnDownloadDirect.href = directLink;
   elBtnOpenDrive.href = getWebViewUrl(file.driveId);
   
-  // Set preview source with loading state
-  elPreviewLoader.style.display = 'flex';
-  elPreviewIframe.style.display = 'none';
+  // Handle preview and unsupported formats
+  const fType = getFileType(file.name);
+  const ext = file.name.toLowerCase().split('.').pop();
+  const isUnsupported = fType === 'office' || ['zip', 'rar', '7z', 'tar', 'gz'].includes(ext);
   
-  // Google Drive iframe preview link
-  elPreviewIframe.src = `https://drive.google.com/file/d/${file.driveId}/preview`;
+  if (isUnsupported) {
+    elPreviewLoader.style.display = 'none';
+    elPreviewIframe.style.display = 'none';
+    elPreviewIframe.src = '';
+    elPreviewUnsupported.style.display = 'flex';
+    elBtnDownloadUnsupported.href = directLink;
+  } else {
+    elPreviewUnsupported.style.display = 'none';
+    elPreviewLoader.style.display = 'flex';
+    elPreviewIframe.style.display = 'none';
+    elPreviewIframe.src = `https://drive.google.com/file/d/${file.driveId}/preview`;
+  }
 
-  // Highlight the folder in the sidebar tree
-  document.querySelectorAll('.folder-label').forEach(el => {
-    const textSpan = el.querySelector('.ft-label-text');
-    if (textSpan && textSpan.textContent.trim() === folderName) {
+  // Load saved notes
+  const savedNotes = localStorage.getItem(`doc_notes_${file.driveId}`) || '';
+  elDocumentNotesTextarea.value = savedNotes;
+  
+  // Update star button
+  updateViewerStarButton();
+
+  // Highlight the folder/file in the sidebar tree
+  document.querySelectorAll('.file-item').forEach(el => {
+    const textSpan = el.querySelector('.file-name');
+    if (textSpan && textSpan.textContent.trim() === file.name) {
       el.classList.add('active');
       
-      // Auto expand parent subjects/categories so the highlighted folder is visible
+      // Auto expand parent nodes so highlighted file is visible
       let parent = el.parentElement;
       while (parent && parent !== elFileTree) {
-        if (parent.classList.contains('subject-node') || parent.classList.contains('category-node')) {
+        if (parent.classList.contains('folder-node') || parent.classList.contains('subject-node') || parent.classList.contains('category-node')) {
           parent.classList.add('open');
         }
         parent = parent.parentElement;
       }
+    } else {
+      el.classList.remove('active');
+    }
+  });
+
+  document.querySelectorAll('.folder-label').forEach(el => {
+    const textSpan = el.querySelector('.ft-label-text');
+    if (textSpan && textSpan.textContent.trim() === folderName) {
+      el.classList.add('active');
     } else {
       el.classList.remove('active');
     }
@@ -24190,7 +24405,21 @@ function selectFolder(folder, pushState = true) {
   
   // Update UI Metadata
   elActiveFolderTitle.textContent = folder.folderName;
-  elActiveFolderCount.textContent = folder.files.length;
+  
+  // Filter folder files based on current search type and starred settings
+  const filteredFiles = folder.files.filter(file => {
+    if (showStarredOnly && !starredFiles.has(file.driveId)) return false;
+    
+    if (activeSearchType !== 'all') {
+      const fType = getFileType(file.name);
+      if (activeSearchType === 'pdf' && fType !== 'pdf') return false;
+      if (activeSearchType === 'video' && fType !== 'video') return false;
+      if (activeSearchType === 'office' && fType !== 'office') return false;
+    }
+    return true;
+  });
+  
+  elActiveFolderCount.textContent = filteredFiles.length;
   
   // Hide progress bar by default
   elBatchProgressContainer.style.display = 'none';
@@ -24198,20 +24427,37 @@ function selectFolder(folder, pushState = true) {
   
   // Populate files list inside details panel
   elFolderFilesList.innerHTML = '';
-  folder.files.forEach(file => {
+  filteredFiles.forEach(file => {
     const card = document.createElement('div');
     card.className = 'folder-file-card';
     
     const info = document.createElement('div');
     info.className = 'folder-file-info';
     
+    const starBtn = document.createElement('button');
+    starBtn.className = 'btn-star-card';
+    starBtn.style.background = 'none';
+    starBtn.style.border = 'none';
+    starBtn.style.cursor = 'pointer';
+    starBtn.style.padding = '0 6px';
+    starBtn.style.fontSize = '16px';
+    const isStarred = starredFiles.has(file.driveId);
+    starBtn.innerHTML = isStarred ? '<i class="fa-solid fa-star" style="color: #fbbf24;"></i>' : '<i class="fa-regular fa-star" style="color: var(--text-muted);"></i>';
+    starBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleStarredFile(file.driveId);
+    });
+    
     const icon = document.createElement('i');
-    icon.className = 'fa-regular fa-file-pdf';
+    const iconClass = getFileIconClass(file.name);
+    const colorClass = getFileIconColorClass(file.name);
+    icon.className = `fa-solid ${iconClass} ${colorClass}`;
     
     const name = document.createElement('span');
     name.className = 'folder-file-name';
     name.textContent = file.name;
     
+    info.appendChild(starBtn);
     info.appendChild(icon);
     info.appendChild(name);
     
@@ -24245,18 +24491,17 @@ function selectFolder(folder, pushState = true) {
   
   // Set up click handler for folder batch download
   elBtnDownloadFolder.onclick = () => {
-    downloadFolderFiles(folder.files);
+    downloadFolderFiles(filteredFiles);
   };
-
+ 
   if (pushState) {
     history.pushState({ panel: 'folder', folder: folder }, '');
   }
-
+ 
   // Trigger priority automatic sync for generic files in this folder
   syncFolderFilesImmediate(folder);
 }
 
-// Batch download trigger with sequential setTimeout spacing
 function downloadFolderFiles(files) {
   if (!files || files.length === 0) return;
   
@@ -24725,6 +24970,114 @@ function closeModal() {
   elSingleLinkFolder.value = '';
 }
 
+// Open/Close Backup Modal
+function openBackupModal() {
+  if (elBackupModal) {
+    elBackupModal.classList.add('active');
+    elBackupFileName.textContent = 'Chưa chọn file';
+    elBtnImportBackup.disabled = true;
+    elBackupFileInput.value = '';
+  }
+}
+
+function closeBackupModal() {
+  if (elBackupModal) {
+    elBackupModal.classList.remove('active');
+  }
+}
+
+// Export Backup JSON
+function exportBackupData() {
+  try {
+    const backupObj = {
+      gdrive_tree_data: fileTreeData,
+      roadmap_progress: roadmapProgress,
+      roadmap_todos: roadmapTodos,
+      theme: activeTheme
+    };
+    
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    
+    const date = new Date();
+    const formattedDate = date.toISOString().slice(0, 10);
+    downloadAnchor.setAttribute("download", `gdrive_study_hub_backup_${formattedDate}.json`);
+    
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    
+    showToast("Đã xuất file sao lưu thành công!");
+  } catch (err) {
+    console.error("Lỗi khi xuất dữ liệu", err);
+    showToast("Lỗi khi tạo file sao lưu!", "error");
+  }
+}
+
+// Import Backup JSON
+function handleBackupFileSelect(event) {
+  const file = event.target.files[0];
+  if (file) {
+    elBackupFileName.textContent = file.name;
+    elBtnImportBackup.disabled = false;
+  } else {
+    elBackupFileName.textContent = 'Chưa chọn file';
+    elBtnImportBackup.disabled = true;
+  }
+}
+
+function processBackupImport() {
+  const file = elBackupFileInput.files[0];
+  if (!file) {
+    showToast("Vui lòng chọn file sao lưu!", "error");
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      
+      if (!data || (data.gdrive_tree_data === undefined && data.roadmap_progress === undefined && data.roadmap_todos === undefined)) {
+        throw new Error("Định dạng file sao lưu không hợp lệ.");
+      }
+      
+      if (Array.isArray(data.gdrive_tree_data)) {
+        fileTreeData = data.gdrive_tree_data;
+        saveData();
+      }
+      
+      if (data.roadmap_progress && typeof data.roadmap_progress === 'object') {
+        roadmapProgress = data.roadmap_progress;
+        saveRoadmapProgress();
+      }
+      
+      if (data.roadmap_todos && typeof data.roadmap_todos === 'object') {
+        roadmapTodos = data.roadmap_todos;
+        saveRoadmapTodos();
+      }
+      
+      if (data.theme === 'light' || data.theme === 'dark') {
+        activeTheme = data.theme;
+        localStorage.setItem('theme', activeTheme);
+      }
+      
+      showToast("Khôi phục dữ liệu thành công! Đang tải lại...", "success");
+      closeBackupModal();
+      
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
+    } catch (err) {
+      console.error("Lỗi khi khôi phục", err);
+      showToast("Lỗi: File sao lưu không đúng định dạng hoặc bị lỗi!", "error");
+    }
+  };
+  reader.readAsText(file);
+}
+
 // --- Theme & Mode Management ---
 
 function initAppTheme() {
@@ -24786,7 +25139,13 @@ function renderRoadmapSubjectsSidebar() {
   if (!elRoadmapSubjectsList) return;
   elRoadmapSubjectsList.innerHTML = '';
   
+  const activeSubjects = getActiveRoadmapSubjects();
+  
   Object.keys(ROADMAP_SUBJECTS).forEach(subjName => {
+    if (activeSubjects.length > 0 && !activeSubjects.includes(subjName)) {
+      return; // Hide subjects not in active combination
+    }
+    
     const item = document.createElement('div');
     item.className = 'folder-label';
     item.setAttribute('data-roadmap-tab', subjName);
@@ -24802,8 +25161,17 @@ function renderRoadmapSubjectsSidebar() {
     text.className = 'ft-label-text';
     text.textContent = subjName;
     
+    const badge = document.createElement('span');
+    badge.className = 'sidebar-subject-progress';
+    badge.style.marginLeft = 'auto';
+    badge.style.fontSize = '11px';
+    badge.style.opacity = '0.6';
+    badge.style.fontWeight = 'normal';
+    badge.textContent = '0%';
+    
     item.appendChild(icon);
     item.appendChild(text);
+    item.appendChild(badge);
     elRoadmapSubjectsList.appendChild(item);
     
     item.addEventListener('click', () => {
@@ -24812,8 +25180,232 @@ function renderRoadmapSubjectsSidebar() {
   });
 }
 
+function renderDashboard() {
+  const activeSubjects = getActiveRoadmapSubjects();
+  
+  // 1. Total files count
+  let totalFiles = 0;
+  const fileCountBySubject = {};
+  
+  fileTreeData.forEach(category => {
+    category.subjects.forEach(subject => {
+      const cleanSubjName = subject.subjectName;
+      if (activeSubjects.length > 0 && !activeSubjects.includes(cleanSubjName)) {
+        return; // Skip inactive subjects
+      }
+      let subjCount = 0;
+      subject.folders.forEach(folder => {
+        subjCount += folder.files.length;
+      });
+      totalFiles += subjCount;
+      
+      fileCountBySubject[cleanSubjName] = (fileCountBySubject[cleanSubjName] || 0) + subjCount;
+    });
+  });
+  
+  const elDbStatTotalFiles = document.getElementById('db-stat-total-files');
+  if (elDbStatTotalFiles) elDbStatTotalFiles.textContent = totalFiles;
+  
+  // 2. Global roadmap progress
+  let checkedRoadmaps = 0;
+  let totalRoadmaps = 0;
+  const progressBySubject = {};
+  
+  // Timeline phases progress
+  ROADMAP_PHASES.forEach((phase, pIndex) => {
+    phase.milestones.forEach((_, mIndex) => {
+      totalRoadmaps++;
+      if (roadmapProgress[`phase_${pIndex}_ms_${mIndex}`]) {
+        checkedRoadmaps++;
+      }
+    });
+  });
+  
+  // Subject milestones progress
+  Object.keys(ROADMAP_SUBJECTS).forEach(subjName => {
+    const isActive = activeSubjects.length === 0 || activeSubjects.includes(subjName);
+    
+    let subjChecked = 0;
+    let subjTotal = 0;
+    ROADMAP_SUBJECTS[subjName].forEach((chapter, cIndex) => {
+      chapter.milestones.forEach((_, mIndex) => {
+        if (isActive) {
+          totalRoadmaps++;
+        }
+        subjTotal++;
+        if (roadmapProgress[`subj_${subjName}_chap_${cIndex}_ms_${mIndex}`]) {
+          if (isActive) {
+            checkedRoadmaps++;
+          }
+          subjChecked++;
+        }
+      });
+    });
+    if (isActive) {
+      progressBySubject[subjName] = { checked: subjChecked, total: subjTotal };
+    }
+  });
+  
+  const globalPercent = totalRoadmaps > 0 ? Math.round((checkedRoadmaps / totalRoadmaps) * 100) : 0;
+  const elDbStatRoadmapPercent = document.getElementById('db-stat-roadmap-percent');
+  if (elDbStatRoadmapPercent) elDbStatRoadmapPercent.textContent = `${globalPercent}%`;
+  
+  // 3. Todo progress
+  const doneTodos = roadmapTodos.filter(t => t.completed).length;
+  const totalTodos = roadmapTodos.length;
+  const elDbStatTodoDone = document.getElementById('db-stat-todo-done');
+  if (elDbStatTodoDone) elDbStatTodoDone.textContent = `${doneTodos}/${totalTodos}`;
+  
+  // 4. Render file count by subject chart
+  const elDbChartSubjects = document.getElementById('db-chart-subjects');
+  if (elDbChartSubjects) {
+    elDbChartSubjects.innerHTML = '';
+    
+    // Sort subjects by file count
+    const sortedSubjs = Object.entries(fileCountBySubject).sort((a, b) => b[1] - a[1]);
+    const maxFiles = sortedSubjs.length > 0 ? Math.max(...sortedSubjs.map(s => s[1]), 1) : 1;
+    
+    sortedSubjs.forEach(([subj, count]) => {
+      const percent = Math.round((count / maxFiles) * 100);
+      const barItem = document.createElement('div');
+      barItem.style.display = 'flex';
+      barItem.style.flexDirection = 'column';
+      barItem.style.gap = '6px';
+      
+      barItem.innerHTML = `
+        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 500;">
+          <span>${subj}</span>
+          <span style="font-weight: 600; color: var(--color-primary);">${count} tệp tin</span>
+        </div>
+        <div class="progress-bar-bg" style="width: 100%; height: 8px; background: var(--bg-app); border-radius: 4px; overflow: hidden;">
+          <div class="progress-bar-fill" style="width: ${percent}%; height: 100%; background: linear-gradient(90deg, var(--color-primary), var(--color-accent)); transition: width 0.3s ease;"></div>
+        </div>
+      `;
+      elDbChartSubjects.appendChild(barItem);
+    });
+  }
+  
+  // 5. Render roadmap progress by subject chart
+  const elDbChartProgress = document.getElementById('db-chart-progress');
+  if (elDbChartProgress) {
+    elDbChartProgress.innerHTML = '';
+    
+    Object.entries(progressBySubject).forEach(([subj, data]) => {
+      const percent = data.total > 0 ? Math.round((data.checked / data.total) * 100) : 0;
+      const barItem = document.createElement('div');
+      barItem.style.display = 'flex';
+      barItem.style.flexDirection = 'column';
+      barItem.style.gap = '6px';
+      
+      barItem.innerHTML = `
+        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 500;">
+          <span>${subj}</span>
+          <span style="font-weight: 600; color: var(--color-success);">${percent}% (${data.checked}/${data.total})</span>
+        </div>
+        <div class="progress-bar-bg" style="width: 100%; height: 8px; background: var(--bg-app); border-radius: 4px; overflow: hidden;">
+          <div class="progress-bar-fill" style="width: ${percent}%; height: 100%; background: linear-gradient(90deg, var(--color-success), var(--color-success-hover)); transition: width 0.3s ease;"></div>
+        </div>
+      `;
+      elDbChartProgress.appendChild(barItem);
+    });
+  }
+}
+
+function updatePresetButtonsState(activeSubjects) {
+  const presetBtns = document.querySelectorAll('#setup-presets .preset-btn');
+  presetBtns.forEach(btn => {
+    const preset = btn.getAttribute('data-preset');
+    const presetSubjs = COMBINATIONS[preset] || [];
+    // Check if preset matches activeSubjects exactly
+    const isMatch = presetSubjs.length > 0 && 
+                    presetSubjs.every(s => activeSubjects.includes(s)) && 
+                    activeSubjects.every(s => presetSubjs.includes(s));
+    
+    if (isMatch) {
+      btn.className = 'btn btn-primary btn-sm preset-btn';
+    } else {
+      btn.className = 'btn btn-secondary btn-sm preset-btn';
+    }
+  });
+}
+
+function renderSetupScreen() {
+  const container = document.getElementById('setup-subject-checks');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  const activeSubjects = getActiveRoadmapSubjects();
+  
+  Object.keys(ROADMAP_SUBJECTS).forEach(subjName => {
+    const isChecked = activeSubjects.includes(subjName);
+    
+    const label = document.createElement('label');
+    label.className = 'setup-subject-check-label';
+    label.style.display = 'flex';
+    label.style.alignItems = 'center';
+    label.style.gap = '8px';
+    label.style.padding = '8px 12px';
+    label.style.border = '1px solid var(--border-color)';
+    label.style.borderRadius = 'var(--radius-md)';
+    label.style.cursor = 'pointer';
+    label.style.transition = 'var(--transition-fast)';
+    
+    // Checkbox input
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.name = 'setup_subjects';
+    input.value = subjName;
+    input.checked = isChecked;
+    input.style.cursor = 'pointer';
+    
+    const textSpan = document.createElement('span');
+    textSpan.textContent = subjName;
+    
+    label.appendChild(input);
+    label.appendChild(textSpan);
+    container.appendChild(label);
+    
+    // Add simple styles on check/uncheck
+    const updateLabelStyle = () => {
+      if (input.checked) {
+        label.style.borderColor = 'var(--color-primary)';
+        label.style.backgroundColor = 'rgba(99, 102, 241, 0.08)';
+      } else {
+        label.style.borderColor = 'var(--border-color)';
+        label.style.backgroundColor = 'transparent';
+      }
+    };
+    
+    input.addEventListener('change', () => {
+      updateLabelStyle();
+      const currentSelected = [];
+      const checkboxes = document.querySelectorAll('#setup-subject-checks input[name="setup_subjects"]');
+      checkboxes.forEach(cb => {
+        if (cb.checked) currentSelected.push(cb.value);
+      });
+      updatePresetButtonsState(currentSelected);
+    });
+    
+    updateLabelStyle(); // initial styling
+  });
+  
+  // Highlight active preset button if any
+  updatePresetButtonsState(activeSubjects);
+}
+
 function selectRoadmapTab(tabName) {
+  const activeSubjects = getActiveRoadmapSubjects();
+  if (activeSubjects.length === 0 && tabName !== 'setup') {
+    tabName = 'setup';
+  }
+  
   currentRoadmapTab = tabName;
+  
+  // Mobile: show main content, hide sidebar by adding tab-open class
+  const roadmapApp = document.getElementById('roadmap-app');
+  if (roadmapApp) {
+    roadmapApp.classList.add('tab-open');
+  }
   
   // Highlight in sidebar
   document.querySelectorAll('#roadmap-app .folder-label').forEach(el => {
@@ -24824,25 +25416,47 @@ function selectRoadmapTab(tabName) {
     }
   });
   
-  if (tabName === 'phases') {
+  // Reset all tab active states
+  if (elRoadmapTabPhases) elRoadmapTabPhases.classList.remove('active');
+  if (elRoadmapTabSubject) elRoadmapTabSubject.classList.remove('active');
+  if (elRoadmapTabTodos) elRoadmapTabTodos.classList.remove('active');
+  if (elRoadmapTabDashboard) elRoadmapTabDashboard.classList.remove('active');
+  if (elRoadmapTabSetup) elRoadmapTabSetup.classList.remove('active');
+  
+  if (tabName === 'setup') {
+    if (elRoadmapMainTitle) elRoadmapMainTitle.textContent = 'Cá nhân hóa khối thi';
+    if (elRoadmapTabSetup) elRoadmapTabSetup.classList.add('active');
+    renderSetupScreen();
+  } else if (tabName === 'phases') {
     if (elRoadmapMainTitle) elRoadmapMainTitle.textContent = 'Các Giai Đoạn Ôn Thi';
     if (elRoadmapTabPhases) elRoadmapTabPhases.classList.add('active');
-    if (elRoadmapTabSubject) elRoadmapTabSubject.classList.remove('active');
-    if (elRoadmapTabTodos) elRoadmapTabTodos.classList.remove('active');
     renderPhases();
   } else if (tabName === 'todos') {
     if (elRoadmapMainTitle) elRoadmapMainTitle.textContent = 'Kế Hoạch Cá Nhân (Todo)';
-    if (elRoadmapTabPhases) elRoadmapTabPhases.classList.remove('active');
-    if (elRoadmapTabSubject) elRoadmapTabSubject.classList.remove('active');
     if (elRoadmapTabTodos) elRoadmapTabTodos.classList.add('active');
     renderTodos();
+  } else if (tabName === 'dashboard') {
+    if (elRoadmapMainTitle) elRoadmapMainTitle.textContent = 'Báo Cáo & Thống Kê';
+    if (elRoadmapTabDashboard) elRoadmapTabDashboard.classList.add('active');
+    renderDashboard();
   } else {
     if (elRoadmapMainTitle) elRoadmapMainTitle.textContent = `Lộ trình ôn tập môn ${tabName}`;
-    if (elRoadmapTabPhases) elRoadmapTabPhases.classList.remove('active');
     if (elRoadmapTabSubject) elRoadmapTabSubject.classList.add('active');
-    if (elRoadmapTabTodos) elRoadmapTabTodos.classList.remove('active');
     renderSubjectRoadmap(tabName);
   }
+}
+
+function closeRoadmapTabMobile() {
+  // Mobile: go back to sidebar by removing tab-open
+  const roadmapApp = document.getElementById('roadmap-app');
+  if (roadmapApp) {
+    roadmapApp.classList.remove('tab-open');
+  }
+  // Clear active highlight
+  document.querySelectorAll('#roadmap-app .folder-label').forEach(el => {
+    el.classList.remove('active');
+  });
+  currentRoadmapTab = null;
 }
 
 function renderPhases() {
@@ -24992,6 +25606,8 @@ function updateRoadmapProgress() {
   let checked = 0;
   let total = 0;
   
+  const activeSubjects = getActiveRoadmapSubjects();
+  
   ROADMAP_PHASES.forEach((phase, pIndex) => {
     phase.milestones.forEach((_, mIndex) => {
       total++;
@@ -25002,14 +25618,29 @@ function updateRoadmapProgress() {
   });
   
   Object.keys(ROADMAP_SUBJECTS).forEach(subjName => {
+    const isActive = activeSubjects.length === 0 || activeSubjects.includes(subjName);
+    
+    let subjChecked = 0;
+    let subjTotal = 0;
     ROADMAP_SUBJECTS[subjName].forEach((chapter, cIndex) => {
       chapter.milestones.forEach((_, mIndex) => {
-        total++;
+        if (isActive) {
+          total++;
+        }
+        subjTotal++;
         if (roadmapProgress[`subj_${subjName}_chap_${cIndex}_ms_${mIndex}`]) {
-          checked++;
+          if (isActive) {
+            checked++;
+          }
+          subjChecked++;
         }
       });
     });
+    const badge = document.querySelector(`#roadmap-app .folder-label[data-roadmap-tab="${subjName}"] .sidebar-subject-progress`);
+    if (badge) {
+      const subjPercent = subjTotal > 0 ? Math.round((subjChecked / subjTotal) * 100) : 0;
+      badge.textContent = `${subjPercent}%`;
+    }
   });
   
   const globalPercent = total > 0 ? Math.round((checked / total) * 100) : 0;
@@ -25098,6 +25729,7 @@ function initEventListeners() {
     currentSearchQuery = '';
     elSearchSuggestions.classList.remove('active');
     renderTree('');
+    if (elDocumentNotesTextarea) elDocumentNotesTextarea.value = '';
   };
 
   const closeActivePanel = () => {
@@ -25107,6 +25739,7 @@ function initEventListeners() {
     elPreviewIframe.src = '';
     activeFile = null;
     activeFolder = null;
+    if (elDocumentNotesTextarea) elDocumentNotesTextarea.value = '';
   };
 
   const logo = document.querySelector('.logo');
@@ -25176,51 +25809,86 @@ function initEventListeners() {
     });
   });
   
-  elBtnOpenImport.addEventListener('click', () => openModal('tab-html'));
-  if (elBtnWelcomeImport) elBtnWelcomeImport.addEventListener('click', () => openModal('tab-html'));
-  if (elBtnEmptyImport) elBtnEmptyImport.addEventListener('click', () => openModal('tab-html'));
-  
-  elBtnCloseModal.addEventListener('click', closeModal);
-  elBtnCancelImport.addEventListener('click', closeModal);
-  
-  tabButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetTab = btn.dataset.tab;
-      
-      tabButtons.forEach(b => b.classList.remove('active'));
-      tabContents.forEach(c => c.classList.remove('active'));
-      
-      btn.classList.add('active');
-      document.getElementById(targetTab).classList.add('active');
+  // Backup & Restore event listeners
+  if (elBtnBackupDocs) elBtnBackupDocs.addEventListener('click', openBackupModal);
+  if (elBtnBackupRoadmap) elBtnBackupRoadmap.addEventListener('click', openBackupModal);
+  if (elBtnCloseBackupModal) elBtnCloseBackupModal.addEventListener('click', closeBackupModal);
+  if (elBtnCancelBackup) elBtnCancelBackup.addEventListener('click', closeBackupModal);
+  if (elBtnExportData) elBtnExportData.addEventListener('click', exportBackupData);
+  if (elBtnTriggerImportFile) {
+    elBtnTriggerImportFile.addEventListener('click', () => elBackupFileInput.click());
+  }
+  if (elBackupFileInput) {
+    elBackupFileInput.addEventListener('change', handleBackupFileSelect);
+  }
+  if (elBtnImportBackup) {
+    elBtnImportBackup.addEventListener('click', processBackupImport);
+  }
+  if (elBackupModal) {
+    elBackupModal.addEventListener('click', (e) => {
+      if (e.target === elBackupModal) closeBackupModal();
     });
-  });
-  
-  elImportModal.addEventListener('click', (e) => {
-    if (e.target === elImportModal) closeModal();
-  });
-  
-  elBtnProcessImport.addEventListener('click', () => {
-    const activeTab = document.querySelector('.tab-btn.active').dataset.tab;
-    
-    if (activeTab === 'tab-html') {
-      const htmlText = elHtmlImportInput.value;
-      if (!htmlText.trim()) {
-        showToast("Vui lòng dán đoạn mã HTML chứa danh sách tài liệu!", "error");
-        return;
+  }
+
+  // Handle btn-browse-docs click (replaces inline onclick)
+  const btnBrowseDocs = document.getElementById('btn-browse-docs');
+  if (btnBrowseDocs) {
+    btnBrowseDocs.addEventListener('click', () => {
+      const treeContainer = document.querySelector('#documents-app .tree-container');
+      if (treeContainer) treeContainer.scrollTop = 0;
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.focus();
+      const firstFolder = document.querySelector('#file-tree .folder-label');
+      if (firstFolder) firstFolder.click();
+    });
+  }
+
+  // Starred button toggle in sidebar
+  if (elBtnToggleStarred) {
+    elBtnToggleStarred.addEventListener('click', () => {
+      showStarredOnly = !showStarredOnly;
+      if (showStarredOnly) {
+        elBtnToggleStarred.classList.add('active');
+        elBtnToggleStarred.innerHTML = '<i class="fa-solid fa-star" style="color: #fbbf24;"></i> Yêu thích';
+      } else {
+        elBtnToggleStarred.classList.remove('active');
+        elBtnToggleStarred.innerHTML = '<i class="fa-regular fa-star"></i> Yêu thích';
       }
-      parseAndImportHTML(htmlText);
-    } else {
-      const url = elSingleLinkUrl.value;
-      const name = elSingleLinkName.value;
-      const folder = elSingleLinkFolder.value;
-      
-      if (!url.trim()) {
-        showToast("Vui lòng điền link Google Drive!", "error");
-        return;
+      renderTree(currentSearchQuery);
+      if (activeFolder) {
+        selectFolder(activeFolder, false);
       }
-      importSingleFile(url, name, folder);
-    }
-  });
+    });
+  }
+
+  // Star button in viewer
+  if (elBtnStarViewer) {
+    elBtnStarViewer.addEventListener('click', () => {
+      if (activeFile) {
+        toggleStarredFile(activeFile.driveId);
+      }
+    });
+  }
+
+  // Document notes auto save
+  if (elDocumentNotesTextarea) {
+    elDocumentNotesTextarea.addEventListener('input', (e) => {
+      if (activeFile) {
+        localStorage.setItem(`doc_notes_${activeFile.driveId}`, e.target.value);
+      }
+    });
+  }
+
+  // Filter type select change
+  if (elSearchFilterType) {
+    elSearchFilterType.addEventListener('change', (e) => {
+      activeSearchType = e.target.value;
+      renderTree(currentSearchQuery);
+      if (activeFolder) {
+        selectFolder(activeFolder, false);
+      }
+    });
+  }
   
   elBtnCopyLink.addEventListener('click', () => {
     if (!activeFile) return;
@@ -25239,22 +25907,7 @@ function initEventListeners() {
     btnSyncName.addEventListener('click', syncActiveFileName);
   }
   
-  elBtnClearAll.addEventListener('click', () => {
-    if (confirm("Bạn có chắc chắn muốn xóa toàn bộ danh sách file? Hành động này không thể hoàn tác.")) {
-      fileTreeData = [];
-      saveData();
-      renderTree();
-      
-      elViewerPanel.classList.remove('active');
-      elFolderPanel.classList.remove('active');
-      elEmptyPanel.classList.add('active');
-      elPreviewIframe.src = '';
-      activeFile = null;
-      activeFolder = null;
-      
-      showToast("Đã xóa sạch dữ liệu.");
-    }
-  });
+
 
   elPreviewIframe.addEventListener('load', () => {
     elPreviewLoader.style.display = 'none';
@@ -25312,10 +25965,83 @@ function initEventListeners() {
       }
     });
   }
+
+  // --- Roadmap Combinations Personalization Event Listeners ---
+  const btnChangeCombination = document.getElementById('btn-change-combination');
+  if (btnChangeCombination) {
+    btnChangeCombination.addEventListener('click', () => {
+      selectRoadmapTab('setup');
+    });
+  }
+
+  const btnSaveSetup = document.getElementById('btn-save-setup');
+  if (btnSaveSetup) {
+    btnSaveSetup.addEventListener('click', () => {
+      const selected = [];
+      const checkboxes = document.querySelectorAll('#setup-subject-checks input[name="setup_subjects"]');
+      checkboxes.forEach(cb => {
+        if (cb.checked) selected.push(cb.value);
+      });
+
+      if (selected.length === 0) {
+        showToast('Vui lòng chọn ít nhất một môn học!', 'error');
+        return;
+      }
+
+      localStorage.setItem('selected_roadmap_subjects', JSON.stringify(selected));
+      showToast('Đã lưu tổ hợp môn thi ôn tập!', 'success');
+      
+      // Refresh sidebar and stats
+      renderRoadmapSubjectsSidebar();
+      updateRoadmapProgress();
+      
+      // Redirect to phases
+      selectRoadmapTab('phases');
+    });
+  }
+
+  const setupPresetsContainer = document.getElementById('setup-presets');
+  if (setupPresetsContainer) {
+    setupPresetsContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.preset-btn');
+      if (!btn) return;
+
+      const preset = btn.getAttribute('data-preset');
+      const subjs = COMBINATIONS[preset] || [];
+
+      // Check the respective checkboxes, uncheck others
+      const checkboxes = document.querySelectorAll('#setup-subject-checks input[name="setup_subjects"]');
+      checkboxes.forEach(cb => {
+        cb.checked = subjs.includes(cb.value);
+        // Trigger style updates
+        cb.dispatchEvent(new Event('change'));
+      });
+      
+      showToast(`Đã chọn khối ${preset}!`);
+    });
+  }
+
+  // --- Roadmap mobile back button ---
+  const btnRoadmapBackMobile = document.getElementById('btn-roadmap-back-mobile');
+  if (btnRoadmapBackMobile) {
+    btnRoadmapBackMobile.addEventListener('click', () => {
+      closeRoadmapTabMobile();
+    });
+  }
 }
 
 // --- App Entry point ---
 document.addEventListener('DOMContentLoaded', () => {
+  // Load starred files
+  try {
+    const savedStars = localStorage.getItem('gdrive_starred_files');
+    if (savedStars) {
+      starredFiles = new Set(JSON.parse(savedStars));
+    }
+  } catch (e) {
+    console.error("Lỗi khi tải danh sách yêu thích", e);
+  }
+
   // Load documents tree data
   loadData();
   renderTree();
