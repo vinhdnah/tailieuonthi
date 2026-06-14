@@ -25099,10 +25099,58 @@ function initAppTheme() {
   }
 }
 
-function toggleAppTheme() {
+function toggleAppTheme(e) {
   const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
-  localStorage.setItem('theme', newTheme);
-  initAppTheme();
+  
+  const changeTheme = () => {
+    localStorage.setItem('theme', newTheme);
+    initAppTheme();
+  };
+
+  if (!document.startViewTransition) {
+    changeTheme();
+    showToast(`Đã chuyển sang giao diện ${newTheme === 'light' ? 'Sáng' : 'Tối'}!`);
+    return;
+  }
+
+  // Get click coordinates, fallback to viewport center
+  let x = window.innerWidth / 2;
+  let y = window.innerHeight / 2;
+  if (e && e.clientX !== undefined && e.clientY !== undefined) {
+    x = e.clientX;
+    y = e.clientY;
+  } else if (e && e.currentTarget) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    x = rect.left + rect.width / 2;
+    y = rect.top + rect.height / 2;
+  }
+
+  // Find distance to the furthest corner
+  const endRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y)
+  );
+
+  const transition = document.startViewTransition(() => {
+    changeTheme();
+  });
+
+  transition.ready.then(() => {
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`
+        ]
+      },
+      {
+        duration: 350,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        pseudoElement: '::view-transition-new(root)'
+      }
+    );
+  });
+
   showToast(`Đã chuyển sang giao diện ${newTheme === 'light' ? 'Sáng' : 'Tối'}!`);
 }
 

@@ -2799,3 +2799,18 @@ body.light-theme #document-notes-textarea:focus {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
 }
 
+/* View Transitions API circular theme toggle reveal */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
